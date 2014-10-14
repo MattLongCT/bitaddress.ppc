@@ -5091,7 +5091,7 @@ exports.init();
 		this.t = 1;
 		this.s = (x < 0) ? -1 : 0;
 		if (x > 0) this[0] = x;
-		else if (x < -1) this[0] = x + DV;
+		else if (x < -1) this[0] = x + this.DV;
 		else this.t = 0;
 	};
 
@@ -7396,7 +7396,6 @@ Peercoin.Address.decodeString = function (string) {
 	return hash;
 };
 	</script>
-
 	<script type="text/javascript">
 //https://raw.github.com/bitcoinjs/bitcoinjs-lib/e90780d3d3b8fc0d027d2bcb38b80479902f223e/src/ecdsa.js
 Peercoin.ECDSA = (function () {
@@ -8061,7 +8060,303 @@ Peercoin.Util = {
 	}
 };
 	</script>
+	<script type="text/javascript">
+/*
+* Copyright (c) 2010-2011 Intalio Pte, All Rights Reserved
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
+// https://github.com/cheongwy/node-scrypt-js
+(function () {
 
+	var MAX_VALUE = 2147483647;
+	var workerUrl = null;
+
+	//function scrypt(byte[] passwd, byte[] salt, int N, int r, int p, int dkLen)
+	/*
+	* N = Cpu cost
+	* r = Memory cost
+	* p = parallelization cost
+	* 
+	*/
+	window.Crypto_scrypt = function (passwd, salt, N, r, p, dkLen, callback) {
+		if (N == 0 || (N & (N - 1)) != 0) throw Error("N must be > 0 and a power of 2");
+
+		if (N > MAX_VALUE / 128 / r) throw Error("Parameter N is too large");
+		if (r > MAX_VALUE / 128 / p) throw Error("Parameter r is too large");
+
+		var PBKDF2_opts = { iterations: 1, hasher: Crypto.SHA256, asBytes: true };
+
+		var B = Crypto.PBKDF2(passwd, salt, p * 128 * r, PBKDF2_opts);
+
+		try {
+			var i = 0;
+			var worksDone = 0;
+			var makeWorker = function () {
+				if (!workerUrl) {
+					var code = '(' + scryptCore.toString() + ')()';
+					var blob;
+					try {
+						blob = new Blob([code], { type: "text/javascript" });
+					} catch (e) {
+						window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+						blob = new BlobBuilder();
+						blob.append(code);
+						blob = blob.getBlob("text/javascript");
+					}
+					workerUrl = URL.createObjectURL(blob);
+				}
+				var worker = new Worker(workerUrl);
+				worker.onmessage = function (event) {
+					var Bi = event.data[0], Bslice = event.data[1];
+					worksDone++;
+
+					if (i < p) {
+						worker.postMessage([N, r, p, B, i++]);
+					}
+
+					var length = Bslice.length, destPos = Bi * 128 * r, srcPos = 0;
+					while (length--) {
+						B[destPos++] = Bslice[srcPos++];
+					}
+
+					if (worksDone == p) {
+						callback(Crypto.PBKDF2(passwd, B, dkLen, PBKDF2_opts));
+					}
+				};
+				return worker;
+			};
+			var workers = [makeWorker(), makeWorker()];
+			workers[0].postMessage([N, r, p, B, i++]);
+			if (p > 1) {
+				workers[1].postMessage([N, r, p, B, i++]);
+			}
+		} catch (e) {
+			window.setTimeout(function () {
+				scryptCore();
+				callback(Crypto.PBKDF2(passwd, B, dkLen, PBKDF2_opts));
+			}, 0);
+		}
+
+		// using this function to enclose everything needed to create a worker (but also invokable directly for synchronous use)
+		function scryptCore() {
+			var XY = [], V = [];
+
+			if (typeof B === 'undefined') {
+				onmessage = function (event) {
+					var data = event.data;
+					var N = data[0], r = data[1], p = data[2], B = data[3], i = data[4];
+
+					var Bslice = [];
+					arraycopy32(B, i * 128 * r, Bslice, 0, 128 * r);
+					smix(Bslice, 0, r, N, V, XY);
+
+					postMessage([i, Bslice]);
+				};
+			} else {
+				for (var i = 0; i < p; i++) {
+					smix(B, i * 128 * r, r, N, V, XY);
+				}
+			}
+
+			function smix(B, Bi, r, N, V, XY) {
+				var Xi = 0;
+				var Yi = 128 * r;
+				var i;
+
+				arraycopy32(B, Bi, XY, Xi, Yi);
+
+				for (i = 0; i < N; i++) {
+					arraycopy32(XY, Xi, V, i * Yi, Yi);
+					blockmix_salsa8(XY, Xi, Yi, r);
+				}
+
+				for (i = 0; i < N; i++) {
+					var j = integerify(XY, Xi, r) & (N - 1);
+					blockxor(V, j * Yi, XY, Xi, Yi);
+					blockmix_salsa8(XY, Xi, Yi, r);
+				}
+
+				arraycopy32(XY, Xi, B, Bi, Yi);
+			}
+
+			function blockmix_salsa8(BY, Bi, Yi, r) {
+				var X = [];
+				var i;
+
+				arraycopy32(BY, Bi + (2 * r - 1) * 64, X, 0, 64);
+
+				for (i = 0; i < 2 * r; i++) {
+					blockxor(BY, i * 64, X, 0, 64);
+					salsa20_8(X);
+					arraycopy32(X, 0, BY, Yi + (i * 64), 64);
+				}
+
+				for (i = 0; i < r; i++) {
+					arraycopy32(BY, Yi + (i * 2) * 64, BY, Bi + (i * 64), 64);
+				}
+
+				for (i = 0; i < r; i++) {
+					arraycopy32(BY, Yi + (i * 2 + 1) * 64, BY, Bi + (i + r) * 64, 64);
+				}
+			}
+
+			function R(a, b) {
+				return (a << b) | (a >>> (32 - b));
+			}
+
+			function salsa20_8(B) {
+				var B32 = new Array(32);
+				var x = new Array(32);
+				var i;
+
+				for (i = 0; i < 16; i++) {
+					B32[i] = (B[i * 4 + 0] & 0xff) << 0;
+					B32[i] |= (B[i * 4 + 1] & 0xff) << 8;
+					B32[i] |= (B[i * 4 + 2] & 0xff) << 16;
+					B32[i] |= (B[i * 4 + 3] & 0xff) << 24;
+				}
+
+				arraycopy(B32, 0, x, 0, 16);
+
+				for (i = 8; i > 0; i -= 2) {
+					x[4] ^= R(x[0] + x[12], 7); x[8] ^= R(x[4] + x[0], 9);
+					x[12] ^= R(x[8] + x[4], 13); x[0] ^= R(x[12] + x[8], 18);
+					x[9] ^= R(x[5] + x[1], 7); x[13] ^= R(x[9] + x[5], 9);
+					x[1] ^= R(x[13] + x[9], 13); x[5] ^= R(x[1] + x[13], 18);
+					x[14] ^= R(x[10] + x[6], 7); x[2] ^= R(x[14] + x[10], 9);
+					x[6] ^= R(x[2] + x[14], 13); x[10] ^= R(x[6] + x[2], 18);
+					x[3] ^= R(x[15] + x[11], 7); x[7] ^= R(x[3] + x[15], 9);
+					x[11] ^= R(x[7] + x[3], 13); x[15] ^= R(x[11] + x[7], 18);
+					x[1] ^= R(x[0] + x[3], 7); x[2] ^= R(x[1] + x[0], 9);
+					x[3] ^= R(x[2] + x[1], 13); x[0] ^= R(x[3] + x[2], 18);
+					x[6] ^= R(x[5] + x[4], 7); x[7] ^= R(x[6] + x[5], 9);
+					x[4] ^= R(x[7] + x[6], 13); x[5] ^= R(x[4] + x[7], 18);
+					x[11] ^= R(x[10] + x[9], 7); x[8] ^= R(x[11] + x[10], 9);
+					x[9] ^= R(x[8] + x[11], 13); x[10] ^= R(x[9] + x[8], 18);
+					x[12] ^= R(x[15] + x[14], 7); x[13] ^= R(x[12] + x[15], 9);
+					x[14] ^= R(x[13] + x[12], 13); x[15] ^= R(x[14] + x[13], 18);
+				}
+
+				for (i = 0; i < 16; ++i) B32[i] = x[i] + B32[i];
+
+				for (i = 0; i < 16; i++) {
+					var bi = i * 4;
+					B[bi + 0] = (B32[i] >> 0 & 0xff);
+					B[bi + 1] = (B32[i] >> 8 & 0xff);
+					B[bi + 2] = (B32[i] >> 16 & 0xff);
+					B[bi + 3] = (B32[i] >> 24 & 0xff);
+				}
+			}
+
+			function blockxor(S, Si, D, Di, len) {
+				var i = len >> 6;
+				while (i--) {
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+					D[Di++] ^= S[Si++]; D[Di++] ^= S[Si++];
+				}
+			}
+
+			function integerify(B, bi, r) {
+				var n;
+
+				bi += (2 * r - 1) * 64;
+
+				n = (B[bi + 0] & 0xff) << 0;
+				n |= (B[bi + 1] & 0xff) << 8;
+				n |= (B[bi + 2] & 0xff) << 16;
+				n |= (B[bi + 3] & 0xff) << 24;
+
+				return n;
+			}
+
+			function arraycopy(src, srcPos, dest, destPos, length) {
+				while (length--) {
+					dest[destPos++] = src[srcPos++];
+				}
+			}
+
+			function arraycopy32(src, srcPos, dest, destPos, length) {
+				var i = length >> 5;
+				while (i--) {
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+					dest[destPos++] = src[srcPos++]; dest[destPos++] = src[srcPos++];
+				}
+			}
+		} // scryptCore
+	}; // window.Crypto_scrypt
+})();
+	</script>
 	<style type="text/css">
 html, body { height: 100%; }
 html { overflow-y: scroll; }
@@ -8443,6 +8738,13 @@ body { font-family: Arial, sans-serif; }
 					<span><label id="detaillabelenterprivatekey" for="detailprivkey">Enter Private Key (any format)</label> <input type="text" id="detailprivkey" value="" onfocus="this.select();" onkeypress="if (event.keyCode == 13) ninja.wallets.detailwallet.viewDetails();" /></span>
 					<span><input type="button" id="detailview" value="View Details" onclick="ninja.wallets.detailwallet.viewDetails();" /></span>
 					<span class="print"><input type="button" name="print" id="detailprint" value="Print" onclick="window.print();" /></span>
+					<div class="row extra">
+						<span><label id="detailkeyformats">Key Formats: WIF, WIFC, HEX, B64, B6, MINI, BIP38</label></span>
+					</div>
+					<div id="detailbip38commands">
+						<span><label id="detaillabelpassphrase">Enter BIP38 Passphrase</label> <input type="text" id="detailprivkeypassphrase" value="" onfocus="this.select();" onkeypress="if (event.keyCode == 13) ninja.wallets.detailwallet.viewDetails();" /></span>
+						<span><input type="button" id="detaildecrypt" value="Decrypt BIP38" onclick="ninja.wallets.detailwallet.viewDetails();" /></span>
+					</div>
 				</div>
 				<div id="detailkeyarea">
 					<div class="notes">
@@ -8555,48 +8857,264 @@ ninja.privateKey = {
 		// compressed when both keys are compressed
 		if (ecKey1.compressed && ecKey2.compressed) combinedPrivateKey.setCompressed(true);
 		return combinedPrivateKey;
+	},
+	// 58 base58 characters starting with 6P
+	isBIP38Format: function (key) {
+		key = key.toString();
+		return (/^6P[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{56}$/.test(key));
+	},
+	BIP38EncryptedKeyToByteArrayAsync: function (base58Encrypted, passphrase, callback) {
+		var hex;
+		try {
+			hex = Peercoin.Base58.decode(base58Encrypted);
+		} catch (e) {
+			callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+			return;
+		}
+
+		// 43 bytes: 2 bytes prefix, 37 bytes payload, 4 bytes checksum
+		if (hex.length != 43) {
+			callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+			return;
+		}
+		// first byte is always 0x01 
+		else if (hex[0] != 0x01) {
+			callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+			return;
+		}
+
+		var expChecksum = hex.slice(-4);
+		hex = hex.slice(0, -4);
+		var checksum = Peercoin.Util.dsha256(hex);
+		if (checksum[0] != expChecksum[0] || checksum[1] != expChecksum[1] || checksum[2] != expChecksum[2] || checksum[3] != expChecksum[3]) {
+			callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+			return;
+		}
+
+		var isCompPoint = false;
+		var isECMult = false;
+		var hasLotSeq = false;
+		// second byte for non-EC-multiplied key
+		if (hex[1] == 0x42) {
+			// key should use compression
+			if (hex[2] == 0xe0) {
+				isCompPoint = true;
+			}
+			// key should NOT use compression
+			else if (hex[2] != 0xc0) {
+				callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+				return;
+			}
+		}
+		// second byte for EC-multiplied key 
+		else if (hex[1] == 0x43) {
+			isECMult = true;
+			isCompPoint = (hex[2] & 0x20) != 0;
+			hasLotSeq = (hex[2] & 0x04) != 0;
+			if ((hex[2] & 0x24) != hex[2]) {
+				callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+				return;
+			}
+		}
+		else {
+			callback(new Error(ninja.translator.get("detailalertnotvalidprivatekey")));
+			return;
+		}
+
+		var decrypted;
+		var AES_opts = { mode: new Crypto.mode.ECB(Crypto.pad.NoPadding), asBytes: true };
+
+		var verifyHashAndReturn = function () {
+			var tmpkey = new Bitcoin.ECKey(decrypted); // decrypted using closure
+			var base58AddrText = tmpkey.setCompressed(isCompPoint).getPeercoinAddress(); // isCompPoint using closure
+			checksum = Peercoin.Util.dsha256(base58AddrText); // checksum using closure
+
+			if (checksum[0] != hex[3] || checksum[1] != hex[4] || checksum[2] != hex[5] || checksum[3] != hex[6]) {
+				callback(new Error(ninja.translator.get("bip38alertincorrectpassphrase"))); // callback using closure
+				return;
+			}
+			callback(tmpkey.getPeercoinPrivateKeyByteArray()); // callback using closure
+		};
+
+		if (!isECMult) {
+			var addresshash = hex.slice(3, 7);
+			Crypto_scrypt(passphrase, addresshash, 16384, 8, 8, 64, function (derivedBytes) {
+				var k = derivedBytes.slice(32, 32 + 32);
+				decrypted = Crypto.AES.decrypt(hex.slice(7, 7 + 32), k, AES_opts);
+				for (var x = 0; x < 32; x++) decrypted[x] ^= derivedBytes[x];
+				verifyHashAndReturn(); //TODO: pass in 'decrypted' as a param
+			});
+		}
+		else {
+			var ownerentropy = hex.slice(7, 7 + 8);
+			var ownersalt = !hasLotSeq ? ownerentropy : ownerentropy.slice(0, 4);
+			Crypto_scrypt(passphrase, ownersalt, 16384, 8, 8, 32, function (prefactorA) {
+				var passfactor;
+				if (!hasLotSeq) { // hasLotSeq using closure
+					passfactor = prefactorA;
+				} else {
+					var prefactorB = prefactorA.concat(ownerentropy); // ownerentropy using closure
+					passfactor = Peercoin.Util.dsha256(prefactorB);
+				}
+				var kp = new Peercoin.ECKey(passfactor);
+				var passpoint = kp.setCompressed(true).getPub();
+
+				var encryptedpart2 = hex.slice(23, 23 + 16);
+
+				var addresshashplusownerentropy = hex.slice(3, 3 + 12);
+				Crypto_scrypt(passpoint, addresshashplusownerentropy, 1024, 1, 1, 64, function (derived) {
+					var k = derived.slice(32);
+
+					var unencryptedpart2 = Crypto.AES.decrypt(encryptedpart2, k, AES_opts);
+					for (var i = 0; i < 16; i++) { unencryptedpart2[i] ^= derived[i + 16]; }
+
+					var encryptedpart1 = hex.slice(15, 15 + 8).concat(unencryptedpart2.slice(0, 0 + 8));
+					var unencryptedpart1 = Crypto.AES.decrypt(encryptedpart1, k, AES_opts);
+					for (var i = 0; i < 16; i++) { unencryptedpart1[i] ^= derived[i]; }
+
+					var seedb = unencryptedpart1.slice(0, 0 + 16).concat(unencryptedpart2.slice(8, 8 + 8));
+
+					var factorb = Peercoin.Util.dsha256(seedb);
+
+					var ps = EllipticCurve.getSECCurveByName("secp256k1");
+					var privateKey = BigInteger.fromByteArrayUnsigned(passfactor).multiply(BigInteger.fromByteArrayUnsigned(factorb)).remainder(ps.getN());
+
+					decrypted = privateKey.toByteArrayUnsigned();
+					verifyHashAndReturn();
+				});
+			});
+		}
+	},
+	BIP38PrivateKeyToEncryptedKeyAsync: function (base58Key, passphrase, compressed, callback) {
+		var privKey = new Bitcoin.ECKey(base58Key);
+		var privKeyBytes = privKey.getPeercoinPrivateKeyByteArray();
+		var address = privKey.setCompressed(compressed).getPeercoinAddress();
+
+		// compute sha256(sha256(address)) and take first 4 bytes
+		var salt = Peercoin.Util.dsha256(address).slice(0, 4);
+
+		// derive key using scrypt
+		var AES_opts = { mode: new Crypto.mode.ECB(Crypto.pad.NoPadding), asBytes: true };
+
+		Crypto_scrypt(passphrase, salt, 16384, 8, 8, 64, function (derivedBytes) {
+			for (var i = 0; i < 32; ++i) {
+				privKeyBytes[i] ^= derivedBytes[i];
+			}
+
+			// 0x01 0x42 + flagbyte + salt + encryptedhalf1 + encryptedhalf2
+			var flagByte = compressed ? 0xe0 : 0xc0;
+			var encryptedKey = [0x01, 0x42, flagByte].concat(salt);
+			encryptedKey = encryptedKey.concat(Crypto.AES.encrypt(privKeyBytes, derivedBytes.slice(32), AES_opts));
+			encryptedKey = encryptedKey.concat(Bitcoin.Util.dsha256(encryptedKey).slice(0, 4));
+			callback(Bitcoin.Base58.encode(encryptedKey));
+		});
+	},
+	BIP38GenerateIntermediatePointAsync: function (passphrase, lotNum, sequenceNum, callback) {
+		var noNumbers = lotNum === null || sequenceNum === null;
+		var rng = new SecureRandom();
+		var ownerEntropy, ownerSalt;
+
+		if (noNumbers) {
+			ownerSalt = ownerEntropy = new Array(8);
+			rng.nextBytes(ownerEntropy);
+		}
+		else {
+			// 1) generate 4 random bytes
+			ownerSalt = new Array(4);
+
+			rng.nextBytes(ownerSalt);
+
+			// 2)  Encode the lot and sequence numbers as a 4 byte quantity (big-endian):
+			// lotnumber * 4096 + sequencenumber. Call these four bytes lotsequence.
+			var lotSequence = BigInteger(4096 * lotNum + sequenceNum).toByteArrayUnsigned();
+
+			// 3) Concatenate ownersalt + lotsequence and call this ownerentropy.
+			var ownerEntropy = ownerSalt.concat(lotSequence);
+		}
+
+
+		// 4) Derive a key from the passphrase using scrypt
+		Crypto_scrypt(passphrase, ownerSalt, 16384, 8, 8, 32, function (prefactor) {
+			// Take SHA256(SHA256(prefactor + ownerentropy)) and call this passfactor
+			var passfactorBytes = noNumbers ? prefactor : Bitcoin.Util.dsha256(prefactor.concat(ownerEntropy));
+			var passfactor = BigInteger.fromByteArrayUnsigned(passfactorBytes);
+
+			// 5) Compute the elliptic curve point G * passfactor, and convert the result to compressed notation (33 bytes)
+			var ellipticCurve = EllipticCurve.getSECCurveByName("secp256k1");
+			var passpoint = ellipticCurve.getG().multiply(passfactor).getEncoded(1);
+
+			// 6) Convey ownersalt and passpoint to the party generating the keys, along with a checksum to ensure integrity.
+			// magic bytes "2C E9 B3 E1 FF 39 E2 51" followed by ownerentropy, and then passpoint
+			var magicBytes = [0x2C, 0xE9, 0xB3, 0xE1, 0xFF, 0x39, 0xE2, 0x51];
+			if (noNumbers) magicBytes[7] = 0x53;
+
+			var intermediate = magicBytes.concat(ownerEntropy).concat(passpoint);
+
+			// base58check encode
+			intermediate = intermediate.concat(Bitcoin.Util.dsha256(intermediate).slice(0, 4));
+			callback(Bitcoin.Base58.encode(intermediate));
+		});
+	},
+	BIP38GenerateECAddressAsync: function (intermediate, compressed, callback) {
+		// decode IPS
+		var x = Bitcoin.Base58.decode(intermediate);
+		//if(x.slice(49, 4) !== Bitcoin.Util.dsha256(x.slice(0,49)).slice(0,4)) {
+		//	callback({error: 'Invalid intermediate passphrase string'});
+		//}
+		var noNumbers = (x[7] === 0x53);
+		var ownerEntropy = x.slice(8, 8 + 8);
+		var passpoint = x.slice(16, 16 + 33);
+
+		// 1) Set flagbyte.
+		// set bit 0x20 for compressed key
+		// set bit 0x04 if ownerentropy contains a value for lotsequence
+		var flagByte = (compressed ? 0x20 : 0x00) | (noNumbers ? 0x00 : 0x04);
+
+
+		// 2) Generate 24 random bytes, call this seedb.
+		var seedB = new Array(24);
+		var rng = new SecureRandom();
+		rng.nextBytes(seedB);
+
+		// Take SHA256(SHA256(seedb)) to yield 32 bytes, call this factorb.
+		var factorB = Peercoin.Util.dsha256(seedB);
+
+		// 3) ECMultiply passpoint by factorb. Use the resulting EC point as a public key and hash it into a Bitcoin
+		// address using either compressed or uncompressed public key methodology (specify which methodology is used
+		// inside flagbyte). This is the generated Bitcoin address, call it generatedaddress.
+		var ec = EllipticCurve.getSECCurveByName("secp256k1").getCurve();
+		var generatedPoint = ec.decodePointHex(ninja.publicKey.getHexFromByteArray(passpoint));
+		var generatedBytes = generatedPoint.multiply(BigInteger.fromByteArrayUnsigned(factorB)).getEncoded(compressed);
+		var generatedAddress = (new Bitcoin.Address(Bitcoin.Util.sha256ripe160(generatedBytes))).toString();
+
+		// 4) Take the first four bytes of SHA256(SHA256(generatedaddress)) and call it addresshash.
+		var addressHash = Bitcoin.Util.dsha256(generatedAddress).slice(0, 4);
+
+		// 5) Now we will encrypt seedb. Derive a second key from passpoint using scrypt
+		Crypto_scrypt(passpoint, addressHash.concat(ownerEntropy), 1024, 1, 1, 64, function (derivedBytes) {
+			// 6) Do AES256Encrypt(seedb[0...15]] xor derivedhalf1[0...15], derivedhalf2), call the 16-byte result encryptedpart1
+			for (var i = 0; i < 16; ++i) {
+				seedB[i] ^= derivedBytes[i];
+			}
+			var AES_opts = { mode: new Crypto.mode.ECB(Crypto.pad.NoPadding), asBytes: true };
+			var encryptedPart1 = Crypto.AES.encrypt(seedB.slice(0, 16), derivedBytes.slice(32), AES_opts);
+
+			// 7) Do AES256Encrypt((encryptedpart1[8...15] + seedb[16...23]) xor derivedhalf1[16...31], derivedhalf2), call the 16-byte result encryptedseedb.
+			var message2 = encryptedPart1.slice(8, 8 + 8).concat(seedB.slice(16, 16 + 8));
+			for (var i = 0; i < 16; ++i) {
+				message2[i] ^= derivedBytes[i + 16];
+			}
+			var encryptedSeedB = Crypto.AES.encrypt(message2, derivedBytes.slice(32), AES_opts);
+
+			// 0x01 0x43 + flagbyte + addresshash + ownerentropy + encryptedpart1[0...7] + encryptedpart2
+			var encryptedKey = [0x01, 0x43, flagByte].concat(addressHash).concat(ownerEntropy).concat(encryptedPart1.slice(0, 8)).concat(encryptedSeedB);
+
+			// base58check encode
+			encryptedKey = encryptedKey.concat(Peercoin.Util.dsha256(encryptedKey).slice(0, 4));
+			callback(generatedAddress, Peercoin.Base58.encode(encryptedKey));
+		});
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ninja.publicKey = {
 	isPublicKeyHexFormat: function (key) {
@@ -8629,7 +9147,7 @@ ninja.publicKey = {
 		// if both points are the same return null
 		if (ecPoint1.equals(ecPoint2)) return null;
 		var compressed = (ecPoint1.compressed && ecPoint2.compressed);
-			var pubKey = ecPoint1.add(ecPoint2).getEncoded(compressed);
+		var pubKey = ecPoint1.add(ecPoint2).getEncoded(compressed);
 		return pubKey;
 	},
 	getByteArrayFromMultiplying: function (pubKeyHex, ecKey) {
@@ -8638,7 +9156,7 @@ ninja.publicKey = {
 		var compressed = (ecPoint.compressed && ecKey.compressed);
 		// if both points are the same return null
 		ecKey.setCompressed(false);
-		if(ecPoint.equals(ecKey.getPubPoint())) {
+		if (ecPoint.equals(ecKey.getPubPoint())) {
 			return null;
 		}
 		var bigInt = ecKey.priv;
@@ -8830,11 +9348,55 @@ ninja.getQueryString = function () {
 	}
 	return result;
 };
-</script>
 
+// use when passing an Array of Functions
+ninja.runSerialized = function (functions, onComplete) {
+	onComplete = onComplete || function () { };
+
+	if (functions.length === 0) onComplete();
+	else {
+		// run the first function, and make it call this
+		// function when finished with the rest of the list
+		var f = functions.shift();
+		f(function () { ninja.runSerialized(functions, onComplete); });
+	}
+};
+
+ninja.forSerialized = function (initial, max, whatToDo, onComplete) {
+	onComplete = onComplete || function () { };
+
+	if (initial === max) { onComplete(); }
+	else {
+		// same idea as runSerialized
+		whatToDo(initial, function () { ninja.forSerialized(++initial, max, whatToDo, onComplete); });
+	}
+};
+
+// use when passing an Object (dictionary) of Functions
+ninja.foreachSerialized = function (collection, whatToDo, onComplete) {
+	var keys = [];
+	for (var name in collection) {
+		keys.push(name);
+	}
+	ninja.forSerialized(0, keys.length, function (i, callback) {
+		whatToDo(keys[i], callback);
+	}, onComplete);
+};
+	</script>
 	<script type="text/javascript">
 ninja.translator = {
 	currentCulture: "en",
+
+	autoDetectTranslation: function() {
+		// window.navigator.language for Firefox / Chrome / Opera Safari
+		// window.navigator.userLanguage for IE
+		var language = window.navigator.language || window.navigator.userLanguage;
+		if (!ninja.translator.translate(language)) {
+			// Try to remove part after dash, for example cs-CZ -> cs
+			language = language.substr(0, language.indexOf('-'));
+			ninja.translator.translate(language);
+		}
+	},
 
 	translate: function (culture) {
 		var dict = ninja.translator.translations[culture];
@@ -8855,6 +9417,9 @@ ninja.translator = {
 					document.getElementById(id).innerHTML = dict[id];
 				}
 			}
+			return true;
+		} else {
+			return false;
 		}
 	},
 
@@ -9350,6 +9915,7 @@ ninja.translator.showEnglishJson = function () {
 	div.appendChild(elem);
 	document.body.appendChild(div);
 };
+
 	</script>
 	<script type="text/javascript">
 ninja.wallets.singlewallet = {
@@ -9405,7 +9971,10 @@ ninja.wallets.paperwallet = {
 			limitElement.value = pageBreakAt;
 		}
 		if (document.getElementById("paperkeyarea").innerHTML == "") {
-			ninja.wallets.paperwallet.build(pageBreakAt, pageBreakAt, !document.getElementById('paperart').checked);
+			document.getElementById("paperpassphrase").disabled = true;
+			document.getElementById("paperencrypt").checked = false;
+			ninja.wallets.paperwallet.encrypt = false;
+			ninja.wallets.paperwallet.build(pageBreakAt, pageBreakAt, !document.getElementById('paperart').checked, document.getElementById('paperpassphrase').value);
 		}
 	},
 
@@ -9421,15 +9990,30 @@ ninja.wallets.paperwallet = {
 	useArtisticWallet: true,
 	pageBreakAt: null,
 
-	build: function (numWallets, pageBreakAt, useArtisticWallet) {
+	build: function (numWallets, pageBreakAt, useArtisticWallet, passphrase) {
 		if (numWallets < 1) numWallets = 1;
+		if (pageBreakAt < 1) pageBreakAt = 1;
 		ninja.wallets.paperwallet.remaining = numWallets;
 		ninja.wallets.paperwallet.count = 0;
 		ninja.wallets.paperwallet.useArtisticWallet = useArtisticWallet;
 		ninja.wallets.paperwallet.pageBreakAt = pageBreakAt;
 		document.getElementById("paperkeyarea").innerHTML = "";
+		if (ninja.wallets.paperwallet.encrypt) {
+			if (passphrase == "") {
+				alert(ninja.translator.get("bip38alertpassphraserequired"));
+				return;
+			}
+			document.getElementById("busyblock").className = "busy";
+			ninja.privateKey.BIP38GenerateIntermediatePointAsync(passphrase, null, null, function (intermediate) {
+				ninja.wallets.paperwallet.intermediatePoint = intermediate;
+				document.getElementById("busyblock").className = "";
 				setTimeout(ninja.wallets.paperwallet.batch, 0);
-			},
+			});
+		}
+		else {
+			setTimeout(ninja.wallets.paperwallet.batch, 0);
+		}
+	},
 
 	batch: function () {
 		if (ninja.wallets.paperwallet.remaining > 0) {
@@ -9449,7 +10033,7 @@ ninja.wallets.paperwallet = {
 			}
 			if (paperArea.innerHTML != "") {
 				// page break
-				if (i % pageBreakAt == 1 && ninja.wallets.paperwallet.count >= pageBreakAt) {
+				if ((i - 1) % pageBreakAt == 0 && i >= pageBreakAt) {
 					var pBreak = document.createElement("div");
 					pBreak.setAttribute("class", "pagebreak");
 					document.getElementById("paperkeyarea").appendChild(pBreak);
@@ -9469,18 +10053,35 @@ ninja.wallets.paperwallet = {
 	// generate peercoin address, private key, QR Code and update information in the HTML
 	// idPostFix: 1, 2, 3, etc.
 	generateNewWallet: function (idPostFix) {
-		var key = new Peercoin.ECKey(false);
-		var peercoinAddress = key.getPeercoinAddress();
-		var privateKeyWif = key.getPeercoinWalletImportFormat();
-		if (ninja.wallets.paperwallet.useArtisticWallet) {
-			ninja.wallets.paperwallet.showArtisticWallet(idPostFix, peercoinAddress, privateKeyWif);
+		if (ninja.wallets.paperwallet.encrypt) {
+			ninja.privateKey.BIP38GenerateECAddressAsync(ninja.wallets.paperwallet.intermediatePoint, false, function (address, encryptedKey) {
+				if (ninja.wallets.paperwallet.useArtisticWallet) {
+					ninja.wallets.paperwallet.showArtisticWallet(idPostFix, address, encryptedKey);
+				}
+				else {
+					ninja.wallets.paperwallet.showWallet(idPostFix, address, encryptedKey);
+				}
+			});
 		}
 		else {
-			ninja.wallets.paperwallet.showWallet(idPostFix, peercoinAddress, privateKeyWif);
+			var key = new Peercoin.ECKey(false);
+			var peercoinAddress = key.getPeercoinAddress();
+			var privateKeyWif = key.getPeercoinWalletImportFormat();
+			if (ninja.wallets.paperwallet.useArtisticWallet) {
+				ninja.wallets.paperwallet.showArtisticWallet(idPostFix, peercoinAddress, privateKeyWif);
+			}
+			else {
+				ninja.wallets.paperwallet.showWallet(idPostFix, peercoinAddress, privateKeyWif);
+			}
 		}
 	},
 
 	templateHtml: function (i) {
+		var privateKeyLabel = ninja.translator.get("paperlabelprivatekey");
+		if (ninja.wallets.paperwallet.encrypt) {
+			privateKeyLabel = ninja.translator.get("paperlabelencryptedkey");
+		}
+
 		var walletHtml =
 							"<div class='public'>" +
 								"<div id='qrcode_public" + i + "' class='qrcode_public'></div>" +
@@ -9529,6 +10130,13 @@ ninja.wallets.paperwallet = {
 		ninja.qrCode.showQrCode(keyValuePair, 2.5);
 		document.getElementById("btcaddress" + idPostFix).innerHTML = peercoinAddress;
 		document.getElementById("btcprivwif" + idPostFix).innerHTML = privateKeyWif;
+		if (ninja.wallets.paperwallet.encrypt) {
+			var half = privateKey.length / 2;
+			document.getElementById("btcencryptedkey" + idPostFix).innerHTML = privateKey.slice(0, half) + '<br />' + privateKey.slice(half);
+		}
+		else {
+			document.getElementById("btcprivwif" + idPostFix).innerHTML = privateKey;
+		}
 
 		// CODE to modify SVG DOM elements
 		//var paperSvg = document.getElementById("papersvg" + idPostFix);
@@ -9559,7 +10167,6 @@ ninja.wallets.paperwallet = {
 	}
 };
 	</script>
-
 	<script type="text/javascript">
 ninja.wallets.bulkwallet = {
 	open: function () {
@@ -9567,7 +10174,7 @@ ninja.wallets.bulkwallet = {
 		// show a default CSV list if the text area is empty
 		if (document.getElementById("bulktextarea").value == "") {
 			// return control of the thread to the browser to render the tab switch UI then build a default CSV list
-			setTimeout(function () { ninja.wallets.bulkwallet.buildCSV(3, 1); }, 200);
+			setTimeout(function () { ninja.wallets.bulkwallet.buildCSV(3, 1, document.getElementById("bulkcompressed").checked); }, 200);
 		}
 	},
 
@@ -9587,6 +10194,7 @@ ninja.wallets.bulkwallet = {
 		bulkWallet.csvRowLimit = rowLimit;
 		bulkWallet.csvRowsRemaining = rowLimit;
 		bulkWallet.csvStartIndex = --startIndex;
+		bulkWallet.compressedAddrs = !!compressedAddrs;
 		setTimeout(bulkWallet.batchCSV, 0);
 	},
 
@@ -9600,6 +10208,7 @@ ninja.wallets.bulkwallet = {
 		if (bulkWallet.csvRowsRemaining > 0) {
 			bulkWallet.csvRowsRemaining--;
 			var key = new Peercoin.ECKey(false);
+			key.setCompressed(bulkWallet.compressedAddrs);
 
 			bulkWallet.csv.push((bulkWallet.csvRowLimit - bulkWallet.csvRowsRemaining + bulkWallet.csvStartIndex)
 							+ ",\"" + key.getPeercoinAddress() + "\",\"" + key.toString("wif")
@@ -9666,7 +10275,6 @@ ninja.wallets.bulkwallet = {
 			}
 		};
 	</script>
-
 	<script type="text/javascript">
 ninja.wallets.brainwallet = {
 	open: function () {
@@ -9892,15 +10500,48 @@ ninja.wallets.detailwallet = {
 	viewDetails: function () {
 		var key = document.getElementById("detailprivkey").value.toString().replace(/^\s+|\s+$/g, ""); // trim white space
 		document.getElementById("detailprivkey").value = key;
-		if (Peercoin.ECKey.isMiniFormat(key)) {
-		// show Private Key Mini Format
+			var bip38CommandDisplay = document.getElementById("detailbip38commands").style.display;
+		ninja.wallets.detailwallet.clear();
+		if (key == "") {
+			return;
+		}
+		if (ninja.privateKey.isBIP38Format(key)) {
+			document.getElementById("detailbip38commands").style.display = bip38CommandDisplay;
+			if (bip38CommandDisplay != "block") {
+				document.getElementById("detailbip38commands").style.display = "block";
+				document.getElementById("detailprivkeypassphrase").focus();
+				return;
+			}
+			var passphrase = document.getElementById("detailprivkeypassphrase").value.toString().replace(/^\s+|\s+$/g, ""); // trim white space
+			if (passphrase == "") {
+				alert(ninja.translator.get("bip38alertpassphraserequired"));
+				return;
+			}
+			document.getElementById("busyblock").className = "busy";
+			// show Private Key BIP38 Format
+			document.getElementById("detailprivbip38").innerHTML = key;
+			document.getElementById("detailbip38").style.display = "block";
+			ninja.privateKey.BIP38EncryptedKeyToByteArrayAsync(key, passphrase, function (btcKeyOrError) {
+				document.getElementById("busyblock").className = "";
+				if (btcKeyOrError.message) {
+					alert(btcKeyOrError.message);
+					ninja.wallets.detailwallet.clear();
+				} else {
+					ninja.wallets.detailwallet.populateKeyDetails(new Bitcoin.ECKey(btcKeyOrError));
+				}
+			});
+		}
+		else {
+			if (Peercoin.ECKey.isMiniFormat(key)) {
+				// show Private Key Mini Format
 				document.getElementById("detailprivmini").innerHTML = key;
 				document.getElementById("detailmini").style.display = "block";
 			}
-			else {
-				// hide Private Key Mini Format
-				document.getElementById("detailmini").style.display = "none";
-				}
+			else if (Peercoin.ECKey.isBase6Format(key)) {
+				// show Private Key Base6 Format
+				document.getElementById("detailprivb6").innerHTML = key;
+				document.getElementById("detailb6").style.display = "block";
+			}
 			var btcKey = new Peercoin.ECKey(key);
 			if (btcKey.priv == null) {
 				// enforce a minimum passphrase length
@@ -9920,30 +10561,35 @@ ninja.wallets.detailwallet = {
 					ninja.wallets.detailwallet.clear();
 				}
 			}
-				if (btcKey.priv != null) {
-					btcKey.setCompressed(false);
-					document.getElementById("detailprivhex").innerHTML = btcKey.toString().toUpperCase();
-					document.getElementById("detailprivb64").innerHTML = btcKey.toString("base64");
-					var peercoinAddress = btcKey.getPeercoinAddress();
-					var wif = btcKey.getPeercoinWalletImportFormat();
-					document.getElementById("detailpubkey").innerHTML = btcKey.getPubKeyHex();
-					document.getElementById("detailaddress").innerHTML = peercoinAddress;
-					document.getElementById("detailprivwif").innerHTML = wif;
-					btcKey.setCompressed(true);
-					var peercoinAddressComp = btcKey.getPeercoinAddress();
-					var wifComp = btcKey.getPeercoinWalletImportFormat();
-					document.getElementById("detailpubkeycomp").innerHTML = btcKey.getPubKeyHex();
-					document.getElementById("detailaddresscomp").innerHTML = peercoinAddressComp;
-					document.getElementById("detailprivwifcomp").innerHTML = wifComp;
+			ninja.wallets.detailwallet.populateKeyDetails(btcKey);
+		}
+	},
 
-					ninja.qrCode.showQrCode({
-						"detailqrcodepublic": peercoinAddress,
-						"detailqrcodepubliccomp": peercoinAddressComp,
-						"detailqrcodeprivate": wif,
-						"detailqrcodeprivatecomp": wifComp
-					});
-				}
-			},
+	populateKeyDetails: function (btcKey) {
+		if (btcKey.priv != null) {
+			btcKey.setCompressed(false);
+			document.getElementById("detailprivhex").innerHTML = btcKey.toString().toUpperCase();
+			document.getElementById("detailprivb64").innerHTML = btcKey.toString("base64");
+			var peercoinAddress = btcKey.getPeercoinAddress();
+			var wif = btcKey.getPeercoinWalletImportFormat();
+			document.getElementById("detailpubkey").innerHTML = btcKey.getPubKeyHex();
+			document.getElementById("detailaddress").innerHTML = peercoinAddress;
+			document.getElementById("detailprivwif").innerHTML = wif;
+			btcKey.setCompressed(true);
+			var peercoinAddressComp = btcKey.getPeercoinAddress();
+			var wifComp = btcKey.getPeercoinWalletImportFormat();
+			document.getElementById("detailpubkeycomp").innerHTML = btcKey.getPubKeyHex();
+			document.getElementById("detailaddresscomp").innerHTML = peercoinAddressComp;
+			document.getElementById("detailprivwifcomp").innerHTML = wifComp;
+
+			ninja.qrCode.showQrCode({
+				"detailqrcodepublic": peercoinAddress,
+				"detailqrcodepubliccomp": peercoinAddressComp,
+				"detailqrcodeprivate": wif,
+				"detailqrcodeprivatecomp": wifComp
+			});
+		}
+	},
 
 	clear: function () {
 		document.getElementById("detailpubkey").innerHTML = "";
@@ -9955,6 +10601,7 @@ ninja.wallets.detailwallet = {
 		document.getElementById("detailprivhex").innerHTML = "";
 		document.getElementById("detailprivb64").innerHTML = "";
 		document.getElementById("detailprivmini").innerHTML = "";
+		document.getElementById("detailprivbip38").innerHTML = "";
 		document.getElementById("detailqrcodepublic").innerHTML = "";
 		document.getElementById("detailqrcodepubliccomp").innerHTML = "";
 		document.getElementById("detailqrcodeprivate").innerHTML = "";
@@ -10358,6 +11005,15 @@ ninja.wallets.detailwallet = {
 				}
 				return true;
 			},
+			testGetECKeyFromBase6Key: function () {
+				var baseKey = "100531114202410255230521444145414341221420541210522412225005202300434134213212540304311321323051431";
+				var hexKey = "292665C3872418ADF1DA7FFA3A646F2F0602246DA6098A91D229C32150F2718B";
+				var ecKey = new Bitcoin.ECKey(baseKey);
+				if (ecKey.getBitcoinHexFormat() != hexKey) {
+					return false;
+				}
+				return true;
+			},
 
 			// EllipticCurve tests
 			testDecodePointEqualsDecodeFrom: function () {
@@ -10391,6 +11047,113 @@ ninja.wallets.detailwallet = {
 				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da";
 				var btcKey = new Peercoin.ECKey(key);
 				if (btcKey.getPeercoinAddress() != "1NAjZjF81YGfiJ3rTKc7jf1nmZ26KN7Gkn") {
+					return false;
+				}
+				return true;
+			},
+
+			// test split wallet
+			testSplitAndCombinePrivateKey2of2: function () {
+				// lowercase hex key
+				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da"; //5HpJ4bpHFEMWYwCidjtZHwM2rsMh4PRfmZKV8Y21i7msiUkQKUW
+				var numshares = 2;
+				var threshold = 2;
+				secrets.setRNG();
+				secrets.init(7);
+
+				var shares = ninja.wallets.splitwallet.getFormattedShares(key, numshares, threshold);
+				var combined = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var btcKey = new Bitcoin.ECKey(combined);
+
+				if (btcKey.getBitcoinHexFormat() != key.toUpperCase()) {
+					return false;
+				}
+				return true;
+			},
+			// Example use case #1:
+			// Division of 3 shares:
+			//   1 share in a safety deposit box ("Box")
+			//   1 share at Home
+			//   1 share at Work
+			// Threshold of 2 can be redeemed in these permutations 
+			//   Home + Box 
+			//   Work + Box 
+			//   Home + Work 
+			testSplitAndCombinePrivateKey2of3: function () {
+				// lowercase hex key
+				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da"; //5HpJ4bpHFEMWYwCidjtZHwM2rsMh4PRfmZKV8Y21i7msiUkQKUW
+				var numshares = 3;
+				var threshold = 2;
+				secrets.setRNG();
+				secrets.init(7);
+
+				var shares = ninja.wallets.splitwallet.getFormattedShares(key, numshares, threshold);
+				shares.shift();
+				var combined = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var btcKey = new Bitcoin.ECKey(combined);
+
+				if (btcKey.getBitcoinHexFormat() != key.toUpperCase()) {
+					return false;
+				}
+				return true;
+			},
+			testSplitAndCombinePrivateKey2of4: function () {
+				// uppercase hex key
+				var key = "292665C3872418ADF1DA7FFA3A646F2F0602246DA6098A91D229C32150F2718B"; //5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb
+				var numshares = 4;
+				var threshold = 2;
+				secrets.setRNG();
+				secrets.init(7);
+
+				var shares = ninja.wallets.splitwallet.getFormattedShares(key, numshares, threshold);
+				shares.shift();
+				shares.shift();
+				var combined = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var btcKey = new Bitcoin.ECKey(combined);
+
+				if (btcKey.getPeercoinHexFormat() != key) {
+					return false;
+				}
+				return true;
+			},
+			// Example use case #2:
+			// Division of 13 shares:
+			//   4 shares in a safety deposit box ("Box")
+			//   3 shares with good friend Angie
+			//   3 shares with good friend Fred
+			//   3 shares with Self at home or office
+			// Threshold of 7 can be redeemed in these permutations 
+			//   Self + Box (no trust to spend your coins but your friends are backing up your shares)
+			//   Angie + Box (Angie will send btc to executor of your will)
+			//   Fred + Box (if Angie hasn't already then Fred will send btc to executor of your will)
+			//   Angie + Fred + Self (bank fire/theft then you with both your friends can spend the coins)
+			testSplitAndCombinePrivateKey7of13: function () {
+				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da";
+				var numshares = 12;
+				var threshold = 7;
+				secrets.setRNG();
+				secrets.init(7);
+
+				var shares = ninja.wallets.splitwallet.getFormattedShares(key, numshares, threshold);
+				var combined = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var btcKey = new Bitcoin.ECKey(combined);
+
+				if (btcKey.getBitcoinHexFormat() != key.toUpperCase()) {
+					return false;
+				}
+				return true;
+			},
+			testCombinePrivateKeyFromXofYShares: function () {
+				var key = "5K9nHKqbwc1xXpa6wV5p3AaCnubvxQDBukKaFkq7ThAkxgMTMEh";
+				// these are 4 of 6 shares
+				var shares = ["3XxjMASmrkk6eXMM9kAJA7qiqViNVBfiwA1GQDLvg4PVScL", "3Y2DkcPuNX8VKZwpnDdxw55wJtcnCvv2nALqe8nBLViHvck", 
+					"3Y6qv7kyGwgRBKVHVbUNtzmLYAZWQtTPztPwR8wc7uf4MXR", "3YD4TowZn6jw5ss8U89vrcPHonFW4vSs9VKq8MupV5kevG4"]
+				secrets.setRNG();
+				secrets.init(7);
+
+				var combined = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var btcKey = new Bitcoin.ECKey(combined);
+				if (btcKey.getBitcoinWalletImportFormat() != key) {
 					return false;
 				}
 				return true;
