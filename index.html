@@ -8609,6 +8609,7 @@ body, html { height: 99%; }
 			<div class="tab" id="bulkwallet" onclick="ninja.tabSwitch(this);">Bulk Wallet</div>
 			<div class="tab" id="brainwallet" onclick="ninja.tabSwitch(this);">Brain Wallet</div>
 			<div class="tab" id="vanitywallet" onclick="ninja.tabSwitch(this);">Vanity Wallet</div>
+			<div class="tab" id="splitwallet" onclick="ninja.tabSwitch(this);">Split Wallet</div>
 			<div class="tab" id="detailwallet" onclick="ninja.tabSwitch(this);">Wallet Details</div>
 		</div>
 
@@ -8816,6 +8817,33 @@ body, html { height: 99%; }
 						<span class="label" id="vanitylabelprivatekey">Vanity Private Key (WIF):</span>
 						<span class="output" id="vanityprivatekeywif"></span>
 						<br /><div class="notes" id="vanitylabelnotesprivatekey">The above is the Private Key to load into your wallet. </div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="splitarea" class="walletarea">
+				<div id="splitcommands" class="commands " >
+					<label id="splitlabelthreshold">Minimum share threshold needed to combine</label>
+					<input type="text" id="splitthreshold" value="2" size="4"/>
+					<br/>
+					<label id="splitlabelshares">Number of shares</label>
+					<input type="text" id="splitshares" value="3" size="4"/>
+					<span><input type="button" id="splitview" value="Generate" onclick="ninja.wallets.splitwallet.splitKey();"></span>
+					<div id="splitstep1icon" class="more " onclick="ninja.wallets.splitwallet.openCloseStep(1);"></div>
+				</div>
+				<div id="splitstep1area"></div>
+
+				<div id="combinecommands" class="left commands">
+					<span>
+						<label id="combinelabelentershares">Enter Available Shares (whitespace separated)</label><br/>
+						<textarea id="combineinput" cols="60" rows="10"></textarea><br/>
+					</span>
+					<span><input type="button" id="combineview" value="Combine Shares" onclick="ninja.wallets.splitwallet.combineShares();"></span>
+				</div>
+				<div id="splitstep2area">
+					<div id="combineoutput">
+						<label id="combinelabelprivatekey">Combined Private Key</label>
+						<div id="combinedprivatekey" class="output"></div>
 					</div>
 				</div>
 			</div>
@@ -10799,7 +10827,121 @@ ninja.wallets.detailwallet = {
 	}
 };
 	</script>
+	<script type="text/javascript">
+	ninja.wallets.splitwallet = {
+		open: function () {
+			document.getElementById("splitarea").style.display = "block";
+			secrets.setRNG();
+			secrets.init(7); // 7 bits allows for up to 127 shares
+		},
 
+		close: function () {
+			document.getElementById("splitarea").style.display = "none";
+		},
+
+		mkOutputRow: function (s, id, lbltxt) {
+			var row = document.createElement("div");
+			var label = document.createElement("label");
+			label.innerHTML = lbltxt;
+			var qr = document.createElement("div");
+			var output = document.createElement("span");
+			output.setAttribute("class", "output");
+			output.innerHTML = s;
+
+			qr.setAttribute("id", id);
+			row.setAttribute("class", "splitsharerow");
+			row.appendChild(label);
+			row.appendChild(output);
+			row.appendChild(qr);
+			row.appendChild(document.createElement("br"));
+
+			return row;
+		},
+
+		stripLeadZeros: function (hex) { return hex.split(/^0+/).slice(-1)[0]; },
+
+		hexToBytes: function (hex) {
+			//if input has odd number of digits, pad it
+			if (hex.length % 2 == 1)
+				hex = "0" + hex;
+			for (var bytes = [], c = 0; c < hex.length; c += 2)
+				bytes.push(parseInt(hex.substr(c, 2), 16));
+			return bytes;
+		},
+
+		// Split a private key and update information in the HTML
+		splitKey: function () {
+			try {
+				var numshares = parseInt(document.getElementById('splitshares').value);
+				var threshold = parseInt(document.getElementById('splitthreshold').value);
+				var key = new Peercoin.ECKey(false);
+				var peercoinAddress = key.getPeercoinAddress();
+				var shares = ninja.wallets.splitwallet.getFormattedShares(key.getPeercoinHexFormat(), numshares, threshold);
+
+				var output = document.createElement("div");
+				output.setAttribute("id", "splitoutput");
+				var m = {};
+				output.appendChild(this.mkOutputRow(peercoinAddress, "split_addr", "Peercoin Address:    "));
+				m["split_addr"] = peercoinAddress;
+
+				for (var i = 0; i < shares.length; i++) {
+					var id = "split_qr_" + i;
+					output.appendChild(this.mkOutputRow(shares[i], id, "Share " + (i + 1) + ":          "));
+					m[id] = shares[i];
+				}
+
+				document.getElementById("splitstep1area").innerHTML = output.innerHTML;
+				ninja.qrCode.showQrCode(m);
+
+				document.getElementById("splitstep1area").style.display = "block";
+				document.getElementById("splitstep1icon").setAttribute("class", "less");
+			}
+			catch (e) {
+				// browser does not have sufficient JavaScript support to generate a peercoin address
+				alert(e);
+			}
+		},
+
+		// Combine shares of a private key to retrieve the key
+		combineShares: function () {
+			try {
+				document.getElementById("combinedprivatekey").innerHTML = "";
+				var shares = document.getElementById("combineinput").value.trim().split(/\W+/);
+				var combinedBytes = ninja.wallets.splitwallet.combineFormattedShares(shares);
+				var privkeyBase58 = new Peercoin.ECKey(combinedBytes).getPeercoinWalletImportFormat();
+				document.getElementById("combinedprivatekey").innerHTML = privkeyBase58;
+			}
+			catch (e) {
+				alert(e);
+			}
+		},
+
+		// generate shares and format them in base58
+		getFormattedShares: function (key, numshares, threshold) {
+			var shares = secrets.share(key, numshares, threshold).map(ninja.wallets.splitwallet.hexToBytes).map(Peercoin.Base58.encode);
+			return shares;
+		},
+
+		// combine base58 formatted shares and return a peercoin byte array
+		combineFormattedShares: function (shares) {
+			var combined = secrets.combine(shares.map(Peercoin.Base58.decode).map(Crypto.util.bytesToHex).map(ninja.wallets.splitwallet.stripLeadZeros));
+			return ninja.wallets.splitwallet.hexToBytes(combined);
+		},
+
+		openCloseStep: function (num) {
+			// do close
+			if (document.getElementById("splitstep" + num + "area").style.display == "block") {
+				document.getElementById("splitstep" + num + "area").style.display = "none";
+				document.getElementById("splitstep" + num + "icon").setAttribute("class", "more");
+			}
+			// do open
+			else {
+				document.getElementById("splitstep" + num + "area").style.display = "block";
+				document.getElementById("splitstep" + num + "icon").setAttribute("class", "less");
+			}
+		}
+	};
+	</script>
 	<script type="text/javascript">
 (function (ninja) {
 	var ut = ninja.unitTests = {
