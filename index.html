@@ -8534,10 +8534,6 @@ body, html { height: 99%; }
 	}
 	.menu .tab { border-width: 2px; border-top-left-radius: 5px; border-top-right-radius: 5px; display: inline-block; }
 	.menu .tab.selected { border-bottom: 2px solid #FFF; }
-//	.menu .tab:hover  
-//	{
-//	    background-color: #FFF; margin: 6px 16px; padding: 4px; border-radius: 5px; 
-//	}
 	.menu .tab.selected:hover { color: #000; }
 	
     .pagebreak { height: 50px; }
@@ -8939,7 +8935,7 @@ body, html { height: 99%; }
 		<div id="footer" class="footer">
 			<div class="authorbtc">
 				<div>
-					<span class="item"><a href="http://donate.peercointalk.org/" target="_blank">Donate to Peercointalk projects</a> <a href="http://peer4commit.com/projects/3" target="_blank">Donate to the development of this project</a></span>
+					<a href="http://peer4commit.com/projects/3" target="_blank"><span class="item" id="donate">Donate to the development of this project</span></a>
 					<span class="item" id="footerlabeltranslatedby"></span>
 				</div>
 			</div>
@@ -9611,7 +9607,8 @@ ninja.translator = {
 			"vanityalertinvalidinputpublickeysmatch": "Invalid input. The Public Key of both entries match. You must input two different keys.",
 			"vanityalertinvalidinputcannotmultiple": "Invalid input. Cannot multiply two public keys. Select 'Add' to add two public keys to get a peercoin address.",
 			"vanityprivatekeyonlyavailable": "Only available when combining two private keys",
-			"vanityalertinvalidinputprivatekeysmatch": "Invalid input. The Private Key of both entries match. You must input two different keys."
+			"vanityalertinvalidinputprivatekeysmatch": "Invalid input. The Private Key of both entries match. You must input two different keys.",
+			"generatelabelkeypress": "OR type some random characters into this textbox"
 		},
 
 		"es": {
@@ -9634,15 +9631,19 @@ ninja.translator = {
 			"tagline": "Generador de carteras Peercoin de código abierto en lado de cliente con Javascript",
 			"generatelabelpeercoinaddress": "Generando dirección Peercoin...",
 			"generatelabelmovemouse": "Mueve un poco el ratón para crear entropía...",
+			"generatelabelkeypress": "O escribir algunos caracteres al azar en el campo respectivo",
 			"singlewallet": "Una sola cartera",
 			"paperwallet": "Cartera en papel",
 			"bulkwallet": "Direcciones en masa",
 			"brainwallet": "Cartera mental",
 			"vanitywallet": "Cartera personalizada",
 			"detailwallet": "Detalles de la cartera",
+			"splitwallet": "Portefeuille scission",
+			
 
 			// footer html
 			"footerlabeldonations": "Donaciones:",
+			"donate": "Donar para el desarrollo de este proyecto",
 			//"footerlabeltranslatedby": "Traducción: <b>PFuzzy</b>Vypv2QSmuRXcciT5oEB27mPbWGeva",
 			"footerlabelpgp": "PGP",
 			"footerlabelversion": "Histório de versiones",
@@ -9750,6 +9751,7 @@ ninja.translator = {
 					"tagline": "Générateur De Porte-Monnaie Peercoin Javascript Hors-Ligne",
 					"generatelabelpeercoinaddress": "Création de l'adresse Peercoin...",
 					"generatelabelmovemouse": "Déplacez votre souris pour ajouter de l'entropie...",
+					"generatelabelkeypress": "OU taper quelques caractères aléatoires dans la case",
 					// Be careful: do not exceed the width of the menu
 					"singlewallet": "Porte-monnaie simple",
 					"paperwallet": "Porte-monnaie papier",
@@ -9757,9 +9759,11 @@ ninja.translator = {
 					"brainwallet": "Porte-monnaie inteligent",
 					"vanitywallet": "Porte-monnaie vanité",
 					"detailwallet": "Détails",
+					"splitwallet": "Cartera dividida",
 
 					// footer html
 					"footerlabeldonations": "Dons:",
+					"donate": "Faire un don à l'élaboration de ce projet",
 					//"footerlabeltranslatedby": "Traduction: 1Gy7NYSJNUYqUdXTBow5d7bCUEJkUFDFSq",
 					"footerlabelpgp": "Clé publique PGP",
 					"footerlabelversion": "Historique des versions signées",
@@ -9867,15 +9871,18 @@ ninja.translator = {
 					"tagline": "Генератор Peercoin-кошельков на JavaScript с открытым исходным кодом",
 					"generatelabelpeercoinaddress": "Генерация Peercoin-адреса...",
 					"generatelabelmovemouse": "Подвигайте мышкой, чтобы увеличить случайность результата...",
+					"generatelabelkeypress": "Или введите несколько случайных символов в это поле",
 					"singlewallet": "Одиночный адрес",
 					"paperwallet": "Бумажный кошелёк",
 					"bulkwallet": "Много адресов",
 					"brainwallet": "Мысленный кошелёк",
 					"vanitywallet": "Красивый кошелёк",
 					"detailwallet": "Информация о кошельке",
+					"splitwallet": "сплит бумажник",
 
 					// footer html
 					"footerlabeldonations": "Пожертвования:",
+					"donate": "Пожертвовать на развитие этого проекта",
 					//"footerlabeltranslatedby": "Перевод: PQqxL4Uw6R2YT1tK7EwAZbpQPE8iMVfEXz",
 					"footerlabelpgp": "PGP",
 					"footerlabelversion": "История версий",
@@ -9983,6 +9990,7 @@ ninja.translator = {
 					"tagline": "使用javasvript离线的获取点点币钱包地址",
 					"generatelabelpeercoinaddress": "创建点点币钱包地址...",
 					"generatelabelmovemouse": "移动鼠标产生加密值...",
+					"generatelabelkeypress": "或键入一些随机字符到这个文本框",
 					// Be careful: do not exceed the width of the menu
 					"singlewallet": "普通钱包",
 					"paperwallet": "纸钱包",
@@ -9990,9 +9998,11 @@ ninja.translator = {
 					"brainwallet": "脑钱包",
 					"vanitywallet": "vanity钱包",
 					"detailwallet": "详细",
+					"splitwallet": "拆分钱包",
 
 					// footer html
 					"footerlabeldonations": "捐助:",
+					"donate": "捐赠给该项目的开发",
 					//"footerlabeltranslatedby": "Traduction: 1Gy7NYSJNUYqUdXTBow5d7bCUEJkUFDFSq",
 					"footerlabelpgp": "PGP",
 					"footerlabelversion": "历史版本",
