@@ -8668,7 +8668,7 @@ body, html { height: 99%; }
 						<span><label id="bulklabelrowstogenerate" for="bulklimit">Rows to generate:</label> <input type="text" id="bulklimit" value="3" /></span>
 						<span><label id="bulklabelcompressed" for="bulkcompressed">Compressed addresses?</label> <input type="checkbox" id="bulkcompressed" /></span>
 						<span><input type="button" id="bulkgenerate" value="Generate" onclick="ninja.wallets.bulkwallet.buildCSV(document.getElementById('bulklimit').value * 1, document.getElementById('bulkstartindex').value * 1, document.getElementById('bulkcompressed').checked);" /> </span>
-						<span class=exportpdf><input type=button name=exportpdf id=bulkexportpdf value="Export as PDF" onclick="ninja.wallets.bulkwallet.exportPDF(document.getElementById('bulktextarea').value);" /></span>
+						<span class=exportpdf><input type="button" name="exportpdf" id="bulkexportpdf" value="Export as PDF" onclick="ninja.wallets.bulkwallet.exportPDF(document.getElementById('bulktextarea').value);" /></span>
 						<span class="print"><input type="button" name="print" id="bulkprint" value="Print" onclick="window.print();" /></span>
 					</div>
 				</div>
@@ -9664,13 +9664,17 @@ ninja.translator = {
 			"paperlabeladdressestogenerate": "Direcciones en total:",
 			"papergenerate": "Generar",
 			"paperprint": "Imprimir",
-
+			"paperlabelBIPpassphrase": "Phrase de passe:",
+			"paperlabeladdressesperpage": "Direcciones por página:",
+			
 			// bulk wallet html
 			"bulklabelstartindex": "Empezar en:",
 			"bulklabelrowstogenerate": "Filas a generar:",
 			"bulkgenerate": "Generar",
 			"bulkprint": "Imprimir",
+			"bulklabelcompressed": "direcciones comprimidas",
 			"bulklabelcsv": "Valores separados por coma:",
+			"bulkexportpdf": "Exportar como PDF",
 			"bulklabelformat": "Índice,Dirección,Clave privada (formato para importar)",
 			"bulklabelq1": "¿Por qué debo usar \"Direcciones en masa\" para aceptar Peercoins en mi web?",
 			"bulka1": "La forma tradicional de aceptar peercoins en tu web requiere tener instalado el cliente oficial de peercoin (\"ppcoind\"). Sin embargo muchos servicios de hosting no permiten instalar dicho cliente. Además, ejecutar el cliente en tu servidor supone que las claves privadas están también en el servidor y podrían ser comprometidas en caso de intrusión Al usar este mecanismo, puedes subir al servidor sólo las dirección de peercoin y no las claves privadas. De esta forma no te tienes que preocupar de que alguien robe la cartera si se cuelan en el servidor.",
@@ -9784,14 +9788,18 @@ ninja.translator = {
 					"paperlabeladdressestogenerate": "Nombre d'adresses à créer :",
 					"papergenerate": "Générer",
 					"paperprint": "Imprimer",
-
+					"paperlabelBIPpassphrase": "Frase de contraseña:",
+					"paperlabeladdressesperpage": "Adresses par page:",
+					
 					// bulk wallet html
 					"bulklabelstartindex": "L'indice de départ :",
 					"bulklabelrowstogenerate": "Lignes à générer :",
 					"bulkgenerate": "Générer",
 					"bulkprint": "Imprimer",
+					"bulklabelcompressed": "adresses compressées",
 					"bulklabelcsv": "Valeurs séparées par des virgules (CSV):",
 					"bulklabelformat": "Index, Adresse, Clé privée (WIF)",
+					"bulkexportpdf": "Exporter au format PDF",
 					"bulklabelq1": "Pourquoi utiliserais-je un porte-monnaie en vrac pour accepter les Peercoins sur mon site web ?",
 					"bulka1": "L'approche traditionnelle pour accepter des Peercoins sur votre site web requière l'installation du logiciel Peercoin officiel (\"ppcoind\"). Plusieurs forfaits d'hébergement de sites Web ne supportent pas l'installation du logiciel Peercoin. De plus, faire fonctionner le logiciel Peercoin sur votre serveur web signifie que vos clés privées sont hébergées sur le serveur et pourraient donc être volées si votre serveur est compromis. En utilisant un Porte-monnaie en vrac, vous pouvez publier seulement les adresses Peercoin sur votre serveur et non les clé privées. Vous n'avez alors plus à vous inquiéter du risque de vous faire voler votre porte-monnaie si votre serveur est compromis.",
 					"bulklabelq2": "Comment utiliser le Porte-monnaie en vrac pour utiliser le Peercoin sur mon site web ?",
@@ -9903,13 +9911,17 @@ ninja.translator = {
 					"paperlabeladdressestogenerate": "Всего адресов:",
 					"papergenerate": "Генерировать",
 					"paperprint": "Печатать",
+					"paperlabelBIPpassphrase": "Ключевая фраза:",
+					"paperlabeladdressesperpage": "Адреса на странице:",
 
 					// bulk wallet html
 					"bulklabelstartindex": "Начать с:",
 					"bulklabelrowstogenerate": "Генерировать строк:",
 					"bulkgenerate": "Генерировать",
 					"bulkprint": "Печатать",
+					"bulklabelcompressed": "Сжатые адреса",
 					"bulklabelcsv": "Значения, разделённые запятыми:",
+					"bulkexportpdf": "Экспорт в PDF",
 					"bulklabelformat": "Номер,Адрес,Приватный ключ (формат для импорта)",
 					"bulklabelq1": "Почему стоит использовать массовую генерацию кошельков для приёма платежей в Peercoin на моём сайте?",
 					"bulka1": "Для приёма пиркоинов на сайте традиционном способом вам необходимо запустить на сервере официальный клиент Peercoin (\"ppcoind\"). На многих хостингах нет возможности это сделать. Кроме того, если вы держите запущенным клиент Peercoin, то ваши приватные ключи хранятся на сервере и могут быть украдены, если сервер будет взломан. При использовании массовой генерации вы можете загрузить на сервер только Peercoin-адреса, а не приватные ключи. Тогда вы можете не беспокоиться за безопасность Peercoin-кошельков, даже если сервер будет взломан.",
@@ -10023,14 +10035,18 @@ ninja.translator = {
 					"paperlabeladdressestogenerate": "创建数目:",
 					"papergenerate": "创建",
 					"paperprint": "打印",
-
+					"paperlabelBIPpassphrase": "密码：",
+					"paperlabeladdressesperpage": "每页地址：",
+					
 					// bulk wallet html
 					"bulklabelstartindex": "开始编号 :",
 					"bulklabelrowstogenerate": "创建数目 :",
 					"bulkgenerate": "创建",
 					"bulkprint": "打印",
 					"bulklabelcsv": "保存为CSV:",
+					"bulklabelcompressed": "压缩地址",
 					"bulklabelformat": "保存为WIF",
+					"bulkexportpdf": "导出为PDF",
 					"bulklabelq1": "我为什么在收款时应该使用多个地址 ?",
 					"bulka1": "传统模式下如果你的网站要使用点点币你需要安装 (\"ppcoind\"). 许多服务商不支持安装(\"ppcoind\"). 并且在你的服务器上运行(\"ppcoind\")，意味着你的私钥也在服务器上，一旦被盗，后果不堪设想. 使用批量地址，你就可以只存储地址而不用担心私钥被盗。",
 					"bulklabelq2": "如何在网站上使用批量地址？",
