@@ -8740,17 +8740,22 @@ body, html { height: 99%; }
 							<div id="brainwalletgeneratewordscontente1" class="more"></div>
 						</div>
 						<div id="brainwalletgeneratewordscontent" class="bulkanswer">
-							<label for="braingeneratewordcount">Number of words: </label>
+							<label for="braingeneratewordcount" id="braingeneratewordcountlabel">Number of words: </label>
 							<input type="number" id="braingeneratewordcount" min="6" max="600" value="12">
-							<button onclick="ninja.wallets.brainwallet.getRandomWords();">Generate Words</button>
+							<button id="braingeneratewordbutton" onclick="ninja.wallets.brainwallet.getRandomWords();">Generate Words</button>
 							<br />
 							<span id="braingeneratedwordlist">NOT GENERATED YET - CLICK THE GENERATE BUTTON!</span>
 							<br />
-							<p><strong>Before using a brain wallet, please ensure you understand the security and risks involved <a href="http://www.peercointalk.org/index.php?topic=2004">(Read more)</a>.</strong></p>
-							<p>12 Randomly selected words will be generated for you to use as a passphrase for your brain wallet. The <a href="https://raw.github.com/spesmilo/electrum/master/lib/mnemonic.py">word list</a> used here is the same as used by the <a href="https://github.com/spesmilo/electrum">Electrum Wallet</a> program, which is open source and you can take a look at.</p>
-							<p>Copy and paste the generated words into the passphrase boxes above to generate your private key and public address.</p>
-							<p>The generated words will always be lowercase and be separated by a space. Double check you don't have an accidental extra space at the end as this could cause confusion later on.</p>
-							<p>Make sure you write this down and keep it safe and offline; if you lose these words, you could lose all of your peercoins.</p>
+							<span id="brainwarning1"><strong>Before using a brain wallet, please ensure you understand the security and risks involved</strong></span> 
+							<a href="http://www.peercointalk.org/index.php?topic=2004" id="brainwarninglink1">(Read more).</a>
+							<span id="brainwarning2">12 Randomly selected words will be generated for you to use as a passphrase for your brain wallet. The </span>
+								<a href="https://raw.github.com/spesmilo/electrum/master/lib/mnemonic.py" id="brainwarninglink2">word list</a> 
+							<span id="brainwarning3">used here is the same as used by the</span>
+								<a href="https://github.com/spesmilo/electrum">Electrum Wallet</a>
+							<span id="brainwarning4">program, which is open source and you can take a look at.</span>
+							<p id="brainwarning5">Copy and paste the generated words into the passphrase boxes above to generate your private key and public address.</p>
+							<p id="brainwarning6">The generated words will always be lowercase and be separated by a space. Double check you don't have an accidental extra space at the end as this could cause confusion later on.</p>
+							<p id="brainwarning7">Make sure you write this down and keep it safe and offline; if you lose these words, you could lose all of your peercoins.</p>
 						</div>
 					</div>
 				</div>
@@ -9694,6 +9699,18 @@ ninja.translator = {
 			"brainlabelpeercoinaddress": "Dirección Peercoin:",
 			"brainlabelprivatekey": "Clave privada (formato para importar):",
 			"brainlabelq1": "Generar palabras al azar",
+			"braingeneratewordcountlabel": "Número de palabras: ",
+			"braingeneratewordbutton": "Generar Palabras",
+			"braingeneratedwordlist": "NO GENERADOS CON TODO - Haga clic en el botón Generar!",
+			"brainwarning1": "Antes de usar una billetera cerebro, asegúrese de comprender plenamente la seguridad y los riesgos involucrados ",
+			"brainwarninglink1": "(Leer más).",
+			"brainwarning2": "12 palabras aleatoriamente seleccionados serán generados para su uso como una frase de contraseña para su cartera cerebro. la ",
+			"brainwarninglink2": "lista de palabras ",
+			"brainwarning3": "utilizado aquí es el mismo que el utilizado por el ",
+			"brainwarning4": "programa, que es de código abierto y se puede echar un vistazo a.",
+			"brainwarning5": "Copia y pega las palabras generadas en las cajas de frase de contraseña anterior para generar su clave privada y megafonía.",
+			"brainwarning6": "Las palabras generadas serán siempre en minúsculas y estar separadas por un espacio. Verifique que no tienen un espacio extra accidental al final ya que esto podría causar confusión más adelante.",
+			"brainwarning7": "Asegúrese de escribir esto y mantenerlo a salvo y fuera de línea; si pierde estas palabras, podría perder todos sus peercoins.",
 
 			// vanity wallet html
 			"vanitylabelstep1": "Paso 1 - Genera tu par de claves",
@@ -9724,6 +9741,7 @@ ninja.translator = {
 			"combinelabelentershares": "Introduzca Acciones disponibles (espacio en blanco separado)",
 			"combineview": "Combine Acciones",
 			"combinelabelprivatekey": "Combinado clave privada",
+			"braingeneratewordcount": "test",
 
 			// detail wallet html
 			"detaillabelenterprivatekey": "Introduce la clave privada (en cualquier formato)",
@@ -9828,6 +9846,18 @@ ninja.translator = {
 			"brainlabelpeercoinaddress": "Adresse Peercoin :",
 			"brainlabelprivatekey": "Clé privée (Format d'importation de porte-monnaie) :",
 			"brainlabelq1": "Générer des mots aléatoires",
+			"braingeneratewordcountlabel": "Nombre de mots: ",
+			"braingeneratewordbutton": "Générer des mots",
+			"braingeneratedwordlist": "PAS Généré ENCORE - Cliquez sur le bouton Générer!",
+			"brainwarning1": "Avant d'utiliser un portefeuille de cerveau, se il vous plaît assurez-vous de bien comprendre la sécurité et les risques impliqués ",
+			"brainwarninglink1": "(En savoir plus).",
+			"brainwarning2": "12 mots choisis au hasard seront générés pour vous d'utiliser comme un mot de passe pour votre portefeuille de cerveau. le ",
+			"brainwarninglink2": "liste de mots ",
+			"brainwarning3": "utilisé ici est le même que celui utilisé par le ",
+			"brainwarning4": "programme, qui est open source et vous pouvez jeter un oeil à.",
+			"brainwarning5": "Copiez et collez les mots générés dans les boîtes de passphrase ci-dessus pour générer votre clé privée et l'adresse publique.",
+			"brainwarning6": "Les mots générés seront toujours être en minuscules et séparés par un espace. Vérifiez que vous ne disposez pas d'un espace supplémentaire accidentelle à la fin, car cela pourrait causer de la confusion plus tard.",
+			"brainwarning7": "Assurez-vous d'écrire cela et garder en sécurité et hors ligne; si vous perdez ces mots, vous risquez de perdre tous vos peercoins.",
 
 			// vanity wallet html
 			"vanitylabelstep1": "Étape 1 - Générer votre paire de clés",
@@ -9961,6 +9991,18 @@ ninja.translator = {
 			"brainlabelpeercoinaddress": "Peercoin-адрес:",
 			"brainlabelprivatekey": "Приватный ключ (формат для импорта):",
 			"brainlabelq1": "Генерация случайных слов",
+			"braingeneratewordcountlabel": "Число слов: ",
+			"braingeneratewordbutton": "Создание слова",
+			"braingeneratedwordlist": "Не генерируется еще - НАЖМИТЕ Создать КНОПКА!",
+			"brainwarning1": "Перед использованием бумажник мозга, пожалуйста, убедитесь, что понимаете безопасности и рисков ",
+			"brainwarninglink1": "(прочитайте больше).",
+			"brainwarning2": "12 случайно выбранных слов будет создан для того, чтобы использовать в качестве ключевой фразы для вашего кошелька мозга. ",
+			"brainwarninglink2": "список слов ",
+			"brainwarning3": "Здесь используется так же, как используется ",
+			"brainwarning4": "Программа, которая является открытым исходным кодом, и вы можете взглянуть на.",
+			"brainwarning5": "Скопируйте и вставьте сгенерированные слова в PassPhrase коробки выше при генерации вашего секретного ключа и публичный адрес.",
+			"brainwarning6": "Сформированные слова всегда быть в нижнем регистре и отделяться пробелом. Двойная проверка вам не придется случайного дополнительное пространство в конце, так как это может привести к путанице позже.",
+			"brainwarning7": "Убедитесь, что вы запишите это и держать его в безопасности и в автономном режиме; если вы потеряете эти слова, вы можете потерять все ваши peercoins.",
 
 			// vanity wallet html
 			"vanitylabelstep1": "Шаг 1 - Сгенерируйте вашу пару ключей",
@@ -10095,6 +10137,19 @@ ninja.translator = {
 			"brainlabelpeercoinaddress": "点点币地址 :",
 			"brainlabelprivatekey": "私钥 (导入钱包的模式):",
 			"brainlabelq1": "生成随机单词",
+			
+			"braingeneratewordcountlabel": "字数: ",
+			"braingeneratewordbutton": "生成词",
+			"braingeneratedwordlist": "尚未产生 - 单击生成按钮!",
+			"brainwarning1": "用脑钱包之前，请确保你了解所涉及的安全和风险 ",
+			"brainwarninglink1": "(阅读更多).",
+			"brainwarning2": "12随机选择的话会产生对你的密码你的大脑的钱包使用。该 ",
+			"brainwarninglink2": "词汇表 ",
+			"brainwarning3": "此处用作所使用的是相同的 ",
+			"brainwarning4": "计划，这是开源的，你可以看看.",
+			"brainwarning5": "复制并粘贴生成的话到密码框上面生成私钥和公共广播.",
+			"brainwarning6": "生成的话永远是小写并用空格隔开。仔细检查你没有在最后一个偶然的额外的空间，因为这可能会导致后来混乱.",
+			"brainwarning7": "请确保你写下来，并保持它的安全和离线;如果你失去了这些话，你可能会失去所有的peercoins的.",
 			
 			// vanity wallet html
 			"vanitylabelstep1": "第1步 - 生成你的“第1步密钥对”",
