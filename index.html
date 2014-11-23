@@ -9631,6 +9631,142 @@ ninja.translator = {
 			"vanityprivatekeyonlyavailable": "Only available when combining two private keys",
 			"vanityalertinvalidinputprivatekeysmatch": "Invalid input. The Private Key of both entries match. You must input two different keys.",
 			"generatelabelkeypress": "OR type some random characters into this textbox"
+			
+	/*Translation reference
+			// header and menu html
+			"tagline": "Open Source JavaScript Client-Side Peercoin Wallet Generator",
+			"generatelabelpeercoinaddress": "Generating Peercoin Address...",
+			"generatelabelmovemouse": "MOVE your mouse around to add some extra randomness...",
+			"generatelabelkeypress": "OR type some random characters into this textbox",
+			"singlewallet": "Single Wallet",
+			"paperwallet": "Paper Wallet",
+			"bulkwallet": "Direcciones en masa",
+			"brainwallet": "Brain Wallet",
+			"vanitywallet": "Vanity Wallet",
+			"detailwallet": "Wallet Details",
+			"splitwallet": "Split Wallet",
+			
+
+			// footer html
+			"footerlabeldonations": "Donations:",
+			"donate": "Donate to the development of this project",
+			"footerlabelgithub": "GitHub Repository",
+			"footerlabelcopyright1": "Copyright wallet.peercointalk.org.",
+			"footerlabelcopyright2": "JavaScript copyrights are included in the source.",
+			"footerlabelnowarranty": "No warrenty",
+			"overviewvideo": "Overview Video - why to use paper wallets",
+			"walkthroughvideo": "Walkthrough Video - how to use paper wallets",
+			"overviewvideo1": "Overview Video - why to use paper wallets",
+			"walkthroughvideo1": "Walkthrough Video - how to use paper wallets",
+
+			// single wallet html
+			"newaddress": "Generate New Address",
+			"singleprint": "Print",
+			"singlelabelpeercoinaddress": "Peercoin Address",
+			"singlelabelprivatekey": "Private Key (Wallet Import Format):",
+
+			// paper wallet html
+			"paperlabelhideart": "Hide Art?",
+			"paperlabeladdressesperpage": "Addresses per page:",
+			"paperlabeladdressestogenerate": "Addresses in total:",
+			"papergenerate": "Generate",
+			"paperprint": "Print",
+			"paperlabelBIPpassphrase": "Passphrase:",
+			"singletip1": "<b>A Peercoin wallet</b> is as simple as a single pairing of a Peercoin address with its corresponding Peercoin private key. Such a wallet has been generated for you in your web browser and is displayed above.",
+			"singletip2": "<b>To safeguard this wallet</b> you must print or otherwise record the Peercoin address and private key. It is important to make a backup copy of the private key and store it in a safe location. This site does not have knowledge of your private key. If you are familiar with PGP you can download this all-in-one HTML page and check that you have an authentic version from the author of this site by matching the SHA1 hash of this HTML with the SHA1 hash available in the signed version history document linked on the footer of this site. If you leave/refresh the site or press the "Generate New Address" button then a new private key will be generated and the previously displayed private key will not be retrievable.	Your Peercoin private key should be kept a secret. Whomever you share the private key with has access to spend all the peercoins associated with that address. If you print your wallet then store it in a zip lock bag to keep it safe from water. Treat a paper wallet like cash.",
+			"singletip3": "<b>Add funds</b> to this wallet by instructing others to send peercoins to your Peercoin address.",
+			"singletip4": "<b>Check your balance</b> by going to https://bkchain.org/ppc or http://ppc.blockr.io/ and entering your Peercoin address.",
+			"singletip5": "<b>Spend your peercoins</b> by going to https://bkchain.org/ppc/wallet and sweep the full balance of your private key into your account at their website. You can also spend your funds by downloading one of the popular peercoin p2p clients and importing your private key to the p2p client wallet. Keep in mind when you import your single key to a peercoin p2p client and spend funds your key will be bundled with other private keys in the p2p client wallet. When you perform a transaction your change will be sent to another peercoin address within the p2p client wallet. You must then backup the p2p client wallet and keep it safe as your remaining peercoins will be stored there. Satoshi advised that one should never delete a wallet."			
+
+			// bulk wallet html
+			"bulklabelstartindex": "Start index:",
+			"bulklabelrowstogenerate": "Rows to generate:",
+			"bulkgenerate": "Generate",
+			"bulkprint": "Print",
+			"bulklabelcompressed": "Compressed addresses?",
+			"bulklabelcsv": "Comma Separated Values:",
+			"bulkexportpdf": "Export to PDF",
+			"bulklabelformat": "Index,Address,Private Key (WIF)",
+			"bulklabelq1": "Why should I use a Bulk Wallet to accept Peercoins on my website?",
+			"bulka1": "The traditional approach to accepting peercoins on your website requires that you install the official peercoin client daemon ("ppcoind"). Many website hosting packages don't support installing the peercoin daemon. Also, running the peercoin daemon on your web server means your private keys are hosted on the server and could get stolen if your web server is hacked. When using a Bulk Wallet you can upload only the peercoin addresses and not the private keys to your web server. Then you don't have to worry about your peercoin wallet being stolen if your web server is hacked. ",
+			"bulklabelq2": "How do I use a Bulk Wallet to accept Peercoins on my website?",
+			"bulklabela2li1": "Use the Bulk Wallet tab to pre-generate a large number of peercoin addresses (10,000+). Copy and paste the generated comma separated values (CSV) list to a secure text file on your computer. Backup the file you just created to a secure location.",
+			"bulklabela2li2": "Import the peercoin addresses into a database table on your web server. (Don't put the wallet/private keys on your web server, otherwise you risk hackers stealing your coins. Just the peercoin addresses as they will be shown to customers.)",
+			"bulklabela2li3": "Provide an option on your website's shopping cart for your customer to pay in Peercoin. When the customer chooses to pay in Peercoin you will then display one of the addresses from your database to the customer as his "payment address" and save it with his shopping cart order.",
+			"bulklabela2li4": "You now need to be notified when the payment arrives. Google "peercoin payment notification" and subscribe to at least one peercoin payment notification service. There are various services that will notify you via Web Services, API, SMS, Email, etc. Once you receive this notification, which could be programmatically automated, you can process the customer's order. To manually check if a payment has arrived you can use Block Explorer. Replace THEADDRESSGOESHERE with the peercoin address you are checking. It could take between 10 minutes to one hour for the transaction to be confirmed.<br />https://bkchain.org/ppc/address/THEADDRESSGOESHERE<br /><br />Unconfirmed transactions can be viewed at: http://blockchain.peercointalk.org/ <br />You should see the transaction there within 30 seconds.",
+			"bulklabela2li5": "Peercoins will safely pile up on the block chain. Use the original wallet file you generated in step 1 to spend them.",
+							
+			// brain wallet html
+			"brainlabelenterpassphrase": "Enter Passphrase:",
+			"brainlabelshow": "Show?",
+			"brainprint": "Print",
+			"brainlabelconfirm": "Confirm Passphrase:",
+			"brainview": "View",
+			"brainalgorithm": "Before Creating a Brain Wallet please read this thread",
+			"brainlabelpeercoinaddress": "Peercoin Address:",
+			"brainlabelprivatekey": "Private Key (Wallet Import Format):",
+			"brainlabelq1": "Generate Random Words",
+			"braingeneratewordcountlabel": "Number of words: ",
+			"braingeneratewordbutton": "Generate Words",
+			"braingeneratedwordlist": "NOT GENERATED YET - CLICK THE GENERATE BUTTON!",
+			"brainwarning1": "Before using a brain wallet, please ensure you understand the security and risks involved ",
+			"brainwarninglink1": "(Read more).",
+			"brainwarning2": "12 Randomly selected words will be generated for you to use as a passphrase for your brain wallet. The ",
+			"brainwarninglink2": "word list ",
+			"brainwarning3": "used here is the same as used by the ",
+			"brainwarning4": "program, which is open source and you can take a look at.",
+			"brainwarning5": "Copy and paste the generated words into the passphrase boxes above to generate your private key and public address.",
+			"brainwarning6": "The generated words will always be lowercase and be separated by a space. Double check you don't have an accidental extra space at the end as this could cause confusion later on.",
+			"brainwarning7": "Make sure you write this down and keep it safe and offline; if you lose these words, you could lose all of your peercoins.",
+
+			// vanity wallet html
+			"vanitylabelstep1": "Step 1 - Generate your "Step 1 Key Pair:",
+			"vanitynewkeypair": "Generate",
+			"vanitylabelstep1publickey": "Public Key:",
+			"vanitylabelstep1pubnotes": "Copy and paste the above into the Your-Part-Public-Key field in the Vanity Pool Website.",
+			"vanitylabelstep1privatekey": "Private Key:",
+			"vanitylabelstep1privnotes": "Copy and paste the above Private Key field into a text file. Ideally save to an encrypted drive. You will need this to retrieve the Peercoin Private Key once the Pool has found your prefix.",
+			"vanitylabelstep2calculateyourvanitywallet": "Step 2 - Calculate your Vanity Wallet",
+			"vanitylabelenteryourpart": "Enter Your Part Private Key (generated in Step 1 above and previously saved):",
+			"vanitylabelenteryourpoolpart": "Enter Pool Part Private Key (from Vanity Pool):",
+			"vanitylabelnote1": "[NOTE: this input box can accept a public key or private key]",
+			"vanitylabelnote2": "[NOTE: this input box can accept a public key or private key]",
+			"vanitylabelradioadd": "Add",
+			"vanitylabelradiomultiply": "Multiply",
+			"vanitycalc": "Calculate Vanity Wallet",
+			"vanitylabelpeercoinaddress": "Vanity Peercoin Address:",
+			"vanitylabelnotespeercoinaddress": "The above is your new address that should include your required prefix.",
+			"vanitylabelpublickeyhex": "Vanity Public Key (HEX):",
+			"vanitylabelnotespublickeyhex": "The above is the Public Key in hexadecimal format.",
+			"vanitylabelprivatekey": "Vanity Private Key (WIF):",
+			"vanitylabelnotesprivatekey": "The above is the Private Key to load into your wallet.",
+			
+			// split wallet html
+			"splitlabelthreshold": "Minimum share threshold needed to combine",
+			"splitlabelshares": "Number of shares",
+			"splitview": "Generate",
+			"combinelabelentershares": "Enter Available Shares (whitespace separated)",
+			"combineview": "Combine Shares",
+			"combinelabelprivatekey": "Combined Private Key",
+
+			// detail wallet html
+			"detaillabelenterprivatekey": "Enter Private Key",
+			"detailview": "View Details",
+			"detailprint": "Print",
+			"detaillabelnote1": "Your Peercoin Private Key is a unique secret number that only you know. It can be encoded in a number of different formats. Below we show the Peercoin Address and Public Key that corresponds to your Private Key as well as your Private Key in the most popular encoding formats (WIF, HEX, B64, MINI).",
+			"detaillabelnote2": "Peercoin v0.3+ stores public keys in compressed format. The client now also supports import and export of private keys with importprivkey/dumpprivkey. The format of the exported private key is determined by whether the address was generated in an old or new wallet.",
+			"detaillabelpeercoinaddress": "Peercoin Address:",
+			"detaillabelpeercoinaddresscomp": "Peercoin Address (compressed):",
+			"detaillabelpublickey": "Public Key (130 characters [0-9A-F]):",
+			"detaillabelpublickeycomp": "Public Key (compressed, 66 characters [0-9A-F]):",
+			"detaillabelprivwif": "Private Key WIF (51 characters base58, starts with a",
+			"detaillabelprivwifcomp": "Private Key WIF (compressed, 52 characters base58, starts with a",
+			"detaillabelprivhex": "Private Key Hexadecimal Format (64 characters [0-9A-F]):",
+			"detaillabelprivb64": "Private Key Base64 (44 characters):",
+			"detaillabelprivmini": "Private Key Mini Format (22, 26 or 30 characters, starts with an 'S'):",
+			"detaillabelq1": "How do I make a wallet using dice? What is B6?",
+			"detaila1": "An important part of creating a Peercoin wallet is ensuring the random numbers used to create the wallet are truly random. Physical randomness is better than computer generated pseudo-randomness. The easiest way to generate physical randomness is with dice. To create a Peercoin private key you only need one six sided die which you roll 99 times. Stopping each time to record the value of the die. When recording the values follow these rules: 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. By doing this you are recording the big random number, your private key, in B6 or base 6 format. You can then enter the 99 character base 6 private key into the text field above and click View Details. You will then see the Peercoin address associated with your private key. You should also make note of your private key in WIF format since it is more widely used."
+*/
 		},
 
 		"es": {
@@ -9666,7 +9802,6 @@ ninja.translator = {
 			// footer html
 			"footerlabeldonations": "Donaciones:",
 			"donate": "Donar para el desarrollo de este proyecto",
-			//"footerlabeltranslatedby": "Traducción: <b>PFuzzy</b>Vypv2QSmuRXcciT5oEB27mPbWGeva",
 			"footerlabelpgp": "PGP",
 			"footerlabelversion": "Histório de versiones",
 			"footerlabelgithub": "Repositorio GitHub",
@@ -9768,7 +9903,6 @@ ninja.translator = {
 			"combinelabelentershares": "Introduzca Acciones disponibles (espacio en blanco separado)",
 			"combineview": "Combine Acciones",
 			"combinelabelprivatekey": "Combinado clave privada",
-			"braingeneratewordcount": "test",
 
 			// detail wallet html
 			"detaillabelenterprivatekey": "Introduce la clave privada (en cualquier formato)",
