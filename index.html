@@ -8365,6 +8365,7 @@ html { overflow-y: scroll; }
 			no-repeat left center; width: 17px; height: 17px; display: inline-block; float: right; }
 a { position: relative; z-index: 20; }
 .right { text-align: right; }
+.justify { text-align: justify !important; }
 .walletarea { display: none; border: 2px solid green; }
 hr { margin: 20px 0; border-top: 2px dashed #008000; }
 .keyarea { font-family: 'Courier New', monospace; text-align: left; position: relative; padding: 5px; overflow: auto; }
@@ -8406,7 +8407,7 @@ body, html { height: 99%; }
 #singlearea { font-size: 90%; }
 #singlesecret { position: relative; top: -130px; float: right; right: 200px; color: red; font-weight: bolder; font-size: 200%;  }
 #singleshare { position: relative; top: -110px; float: left; left: 160px; color: #009900; font-weight: bolder; font-size: 200%;  }
-#singlesafety { text-align: left; padding: 5px; border-top: 2px solid #009900; top: -25px; position: relative; }
+#singlesafety { text-align: left; padding: 15px 15px 10px 25px; border-top: 2px solid #009900; position: relative; }
 
 #generatelabelonlinewarning { display: none; }
 #menu { visibility: hidden; font-size: 90%; }
@@ -8561,15 +8562,15 @@ body, html { height: 99%; }
 	#bulkstartindex, #paperlimit, #paperlimitperpage { width: 35px; }
 	#bulklimit { width: 45px; }
 			
-	.footer { font-family: Arial, sans-serif; font-size: 90%; clear: both; max-width: 750px; padding: 10px 0; margin: 50px auto auto auto; }
-	.footer div span.item { padding: 10px; }
+	.footer { font-family: Arial, sans-serif; font-size: 90%; clear: both; max-width: 750px; padding: 0; margin: 50px auto auto auto; }
+	.footer div span.item { padding: 0 10px; }
 	.footer .authorbtc { float: left; }
 	.footer .authorbtc span.item { text-align: center; display: block; padding: 0 20px; }
-	.footer .authorbtc span.item a { display: inline-block; padding: 5px 0; }
+	.footer .authorbtc span.item a { display: inline-block; padding: 0; }
 	.footer .authorbtc div { position: relative; z-index: 100; }
 	.footer .authorpgp { position: relative; }
 	.footer .authorpgp span.item { text-align: right; display: block; padding: 0 20px; }
-	.footer .copyright { font-size: 80%; clear: both; padding: 5px 0; }
+	.footer .copyright { font-size: 80%; clear: both; padding: 15px 0 5px; }
 	.footer .copyright span { display: inline-block; padding: 5px 0; }
 }
 @media print
@@ -8650,13 +8651,13 @@ body, html { height: 99%; }
 				</div>
 				
 				<div id="singlesafety">
-					<a href="http://youtu.be/lybAGSH2VkI" target="_blank"><span class="item" id="overviewvideo">Overview Video - why to use paper wallets</span></a></br>
-					<a href="http://youtu.be/p78Xp6qEpU4" target="_blank"><span class="item" id="walkthroughvideo">Walkthrough Video - how to use paper wallets</span></a>
-					<p id="singletip1"><b>A Peercoin wallet</b> is as simple as a single pairing of a Peercoin address with its corresponding Peercoin private key. Such a wallet has been generated for you in your web browser and is displayed above.</p>
-					<p id="singletip2"><b>To safeguard this wallet</b> you must print or otherwise record the Peercoin address and private key. It is important to make a backup copy of the private key and store it in a safe location. This site does not have knowledge of your private key. If you are familiar with PGP you can download this all-in-one HTML page and check that you have an authentic version from the author of this site by matching the SHA1 hash of this HTML with the SHA1 hash available in the signed version history document linked on the footer of this site. If you leave/refresh the site or press the "Generate New Address" button then a new private key will be generated and the previously displayed private key will not be retrievable.	Your Peercoin private key should be kept a secret. Whomever you share the private key with has access to spend all the peercoins associated with that address. If you print your wallet then store it in a zip lock bag to keep it safe from water. Treat a paper wallet like cash.</p>
-					<p id="singletip3"><b>Add funds</b> to this wallet by instructing others to send peercoins to your Peercoin address.</p>
-					<p id="singletip4"><b>Check your balance</b> by going to https://bkchain.org/ppc or http://ppc.blockr.io/ and entering your Peercoin address.</p>
-					<p id="singletip5"><b>Spend your peercoins</b> by going to https://bkchain.org/ppc/wallet and sweep the full balance of your private key into your account at their website. You can also spend your funds by downloading one of the popular peercoin p2p clients and importing your private key to the p2p client wallet. Keep in mind when you import your single key to a peercoin p2p client and spend funds your key will be bundled with other private keys in the p2p client wallet. When you perform a transaction your change will be sent to another peercoin address within the p2p client wallet. You must then backup the p2p client wallet and keep it safe as your remaining peercoins will be stored there. Satoshi advised that one should never delete a wallet.</p>
+					<a href="https://youtu.be/lybAGSH2VkI" target="_blank"><span class="item" id="overviewvideo">Overview Video - why to use paper wallets</span></a></br>
+					<a href="https://youtu.be/p78Xp6qEpU4" target="_blank"><span class="item" id="walkthroughvideo">Walkthrough Video - how to use paper wallets</span></a>
+					<p id="singletip1" class="justify"><b>A Peercoin wallet</b> is as simple as a single pairing of a Peercoin address with its corresponding Peercoin private key. Such a wallet has been generated for you in your web browser and is displayed above.</p>
+					<p id="singletip2" class="justify"><b>To safeguard this wallet</b> you must print or otherwise record the Peercoin address and private key. It is important to make a backup copy of the private key and store it in a safe location. This site does not have knowledge of your private key. If you are familiar with PGP you can download this all-in-one HTML page and check that you have an authentic version from the author of this site by matching the SHA1 hash of this HTML with the SHA1 hash available in the signed version history document linked on the footer of this site. If you leave/refresh the site or press the "Generate New Address" button then a new private key will be generated and the previously displayed private key will not be retrievable.	Your Peercoin private key should be kept a secret. Whomever you share the private key with has access to spend all the peercoins associated with that address. If you print your wallet then store it in a zip lock bag to keep it safe from water. Treat a paper wallet like cash.</p>
+					<p id="singletip3" class="justify"><b>Add funds</b> to this wallet by instructing others to send peercoins to your Peercoin address.</p>
+					<p id="singletip4" class="justify"><b>Check your balance</b> by going to https://bkchain.org/ppc or https://ppc.blockr.io/ and entering your Peercoin address.</p>
+					<p id="singletip5" class="justify"><b>Spend your peercoins</b> by going to https://bkchain.org/ppc/wallet and sweep the full balance of your private key into your account at their website. You can also spend your funds by downloading one of the popular peercoin p2p clients and importing your private key to the p2p client wallet. Keep in mind when you import your single key to a peercoin p2p client and spend funds your key will be bundled with other private keys in the p2p client wallet. When you perform a transaction your change will be sent to another peercoin address within the p2p client wallet. You must then backup the p2p client wallet and keep it safe as your remaining peercoins will be stored there. Satoshi advised that one should never delete a wallet.</p>
 				</div>
 			</div>
 
@@ -8684,7 +8685,7 @@ body, html { height: 99%; }
 						<span><label id="bulklabelrowstogenerate" for="bulklimit">Rows to generate:</label> <input type="text" id="bulklimit" value="3" /></span>
 						<span><label id="bulklabelcompressed" for="bulkcompressed">Compressed addresses?</label> <input type="checkbox" id="bulkcompressed" /></span>
 						<span><input type="button" id="bulkgenerate" value="Generate" onclick="ninja.wallets.bulkwallet.buildCSV(document.getElementById('bulklimit').value * 1, document.getElementById('bulkstartindex').value * 1, document.getElementById('bulkcompressed').checked);" /> </span>
-						<span class=exportpdf><input type="button" name="exportpdf" id="bulkexportpdf" value="Export as PDF" onclick="ninja.wallets.bulkwallet.exportPDF(document.getElementById('bulktextarea').value);" /></span>
+						<span class="exportpdf"><input type="button" name="exportpdf" id="bulkexportpdf" value="Export as PDF" onclick="ninja.wallets.bulkwallet.exportPDF(document.getElementById('bulktextarea').value);" /></span>
 						<span class="print"><input type="button" name="print" id="bulkprint" value="Print" onclick="window.print();" /></span>
 					</div>
 				</div>
@@ -8698,19 +8699,19 @@ body, html { height: 99%; }
 							<span id="bulklabelq1">Why should I use a Bulk Wallet to accept Peercoins on my website?</span>
 							<div id="bulke1" class="more"></div>
 						</div>
-						<div id="bulka1" class="bulkanswer">The traditional approach to accepting peercoins on your website requires that you install the official peercoin client daemon ("ppcoind"). Many website hosting packages don't support installing the peercoin daemon. Also, running the peercoin daemon on your web server means your private keys are hosted on the server and could get stolen if your web server is hacked. When using a Bulk Wallet you can upload only the peercoin addresses and not the private keys to your web server. Then you don't have to worry about your peercoin wallet being stolen if your web server is hacked. </div>
+						<div id="bulka1" class="bulkanswer justify">The traditional approach to accepting peercoins on your website requires that you install the official peercoin client daemon ("ppcoind"). Many website hosting packages don't support installing the peercoin daemon. Also, running the peercoin daemon on your web server means your private keys are hosted on the server and could get stolen if your web server is hacked. When using a Bulk Wallet you can upload only the peercoin addresses and not the private keys to your web server. Then you don't have to worry about your peercoin wallet being stolen if your web server is hacked. </div>
 					</div>
 					<div id="bulkfaq2" class="bulkfaq">
 						<div id="bulkq2" class="bulkquestion" onclick="ninja.wallets.bulkwallet.openCloseFaq(2);">
 							<span id="bulklabelq2">How do I use a Bulk Wallet to accept Peercoins on my website?</span>
 							<div id="bulke2" class="more"></div>
 						</div>
-						<div id="bulka2" class="bulkanswer">
+						<div id="bulka2" class="bulkanswer justify">
 							<ol>
 							<li id="bulklabela2li1">Use the Bulk Wallet tab to pre-generate a large number of peercoin addresses (10,000+). Copy and paste the generated comma separated values (CSV) list to a secure text file on your computer. Backup the file you just created to a secure location.</li>
 							<li id="bulklabela2li2">Import the peercoin addresses into a database table on your web server. (Don't put the wallet/private keys on your web server, otherwise you risk hackers stealing your coins. Just the peercoin addresses as they will be shown to customers.)</li>
 							<li id="bulklabela2li3">Provide an option on your website's shopping cart for your customer to pay in Peercoin. When the customer chooses to pay in Peercoin you will then display one of the addresses from your database to the customer as his "payment address" and save it with his shopping cart order.</li>
-							<li id="bulklabela2li4">You now need to be notified when the payment arrives. Google "peercoin payment notification" and subscribe to at least one peercoin payment notification service. There are various services that will notify you via Web Services, API, SMS, Email, etc. Once you receive this notification, which could be programmatically automated, you can process the customer's order. To manually check if a payment has arrived you can use Block Explorer. Replace THEADDRESSGOESHERE with the peercoin address you are checking. It could take between 10 minutes to one hour for the transaction to be confirmed.<br />https://bkchain.org/ppc/address/THEADDRESSGOESHERE<br /><br />Unconfirmed transactions can be viewed at: http://blockchain.peercointalk.org/ <br />You should see the transaction there within 30 seconds.</li>
+							<li id="bulklabela2li4">You now need to be notified when the payment arrives. Google "peercoin payment notification" and subscribe to at least one peercoin payment notification service. There are various services that will notify you via Web Services, API, SMS, Email, etc. Once you receive this notification, which could be programmatically automated, you can process the customer's order. To manually check if a payment has arrived you can use Block Explorer. Replace THEADDRESSGOESHERE with the peercoin address you are checking. It could take between 10 minutes to one hour for the transaction to be confirmed.<br />https://bkchain.org/ppc/address/THEADDRESSGOESHERE<br /><br />Unconfirmed transactions can be viewed at: https://bkchain.org/ <br />You should see the transaction there within 30 seconds.</li>
 							<li id="bulklabela2li5">Peercoins will safely pile up on the block chain. Use the original wallet file you generated in step 1 to spend them.</li>
 							</ol>
 						</div>
@@ -8756,7 +8757,7 @@ body, html { height: 99%; }
 							<span id="brainlabelq1">Generate Random Words</span>
 							<div id="brainwalletgeneratewordscontente1" class="more"></div>
 						</div>
-						<div id="brainwalletgeneratewordscontent" class="bulkanswer">
+						<div id="brainwalletgeneratewordscontent" class="justify bulkanswer">
 							<label for="braingeneratewordcount" id="braingeneratewordcountlabel">Number of words: </label>
 							<input type="number" id="braingeneratewordcount" min="6" max="600" value="12">
 							<button id="braingeneratewordbutton" onclick="ninja.wallets.brainwallet.getRandomWords();">Generate Words</button>
@@ -8881,9 +8882,9 @@ body, html { height: 99%; }
 				</div>
 				<div id="detailkeyarea">
 					<div class="notes">
-						<span id="detaillabelnote1">Your Peercoin Private Key is a unique secret number that only you know. It can be encoded in a number of different formats. Below we show the Peercoin Address and Public Key that corresponds to your Private Key as well as your Private Key in the most popular encoding formats (WIF, HEX, B64, MINI).</span>
+						<span id="detaillabelnote1" class="justify">Your Peercoin Private Key is a unique secret number that only you know. It can be encoded in a number of different formats. Below we show the Peercoin Address and Public Key that corresponds to your Private Key as well as your Private Key in the most popular encoding formats (WIF, HEX, B64, MINI).</span>
 						<br /><br />
-						<span id="detaillabelnote2">Peercoin v0.3+ stores public keys in compressed format. The client now also supports import and export of private keys with importprivkey/dumpprivkey. The format of the exported private key is determined by whether the address was generated in an old or new wallet.</span>
+						<span id="detaillabelnote2" class="justify">Peercoin v0.3+ stores public keys in compressed format. The client now also supports import and export of private keys with importprivkey/dumpprivkey. The format of the exported private key is determined by whether the address was generated in an old or new wallet.</span>
 					</div>
 					<div class="pubqr">
 						<div class="item">
@@ -8947,7 +8948,7 @@ body, html { height: 99%; }
 							<span id="detaillabelq1">How do I make a wallet using dice? What is B6?</span>
 							<div id="detaile1" class="more"></div>
 						</div>
-						<div id="detaila1" class="answer">An important part of creating a Peercoin wallet is ensuring the random numbers used to create the wallet are truly random. Physical randomness is better than computer generated pseudo-randomness. The easiest way to generate physical randomness is with dice. To create a Peercoin private key you only need one six sided die which you roll 99 times. Stopping each time to record the value of the die. When recording the values follow these rules: 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. By doing this you are recording the big random number, your private key, in B6 or base 6 format. You can then enter the 99 character base 6 private key into the text field above and click View Details. You will then see the Peercoin address associated with your private key. You should also make note of your private key in WIF format since it is more widely used.</div>
+						<div id="detaila1" class="answer justify">An important part of creating a Peercoin wallet is ensuring the random numbers used to create the wallet are truly random. Physical randomness is better than computer generated pseudo-randomness. The easiest way to generate physical randomness is with dice. To create a Peercoin private key you only need one six sided die which you roll 99 times. Stopping each time to record the value of the die. When recording the values follow these rules: 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. By doing this you are recording the big random number, your private key, in B6 or base 6 format. You can then enter the 99 character base 6 private key into the text field above and click View Details. You will then see the Peercoin address associated with your private key. You should also make note of your private key in WIF format since it is more widely used.</div>
 					</div>
 				</div>
 			</div>
@@ -8956,9 +8957,9 @@ body, html { height: 99%; }
 		<div id="footer" class="footer">
 			<div class="authorbtc">
 				<div>
-					<a href="http://youtu.be/lybAGSH2VkI" target="_blank"><span class="item" id="overviewvideo1">Overview Video - why to use paper wallets</span></a>
-					<a href="http://youtu.be/p78Xp6qEpU4" target="_blank"><span class="item" id="walkthroughvideo1">Walkthrough Video - how to use paper wallets</span></a>
-					<a href="http://peer4commit.com/projects/3" target="_blank"><span class="item" id="donate">Donate to the development of this project</span></a>
+					<a href="https://youtu.be/lybAGSH2VkI" target="_blank"><span class="item" id="overviewvideo1">Overview Video - why to use paper wallets</span></a>
+					<a href="https://youtu.be/p78Xp6qEpU4" target="_blank"><span class="item" id="walkthroughvideo1">Walkthrough Video - how to use paper wallets</span></a>
+					<a href="https://peer4commit.com/projects/3" target="_blank"><span class="item" id="donate">Donate to the development of this project</span></a>
 					<span class="item" id="footerlabeltranslatedby"></span>
 				</div>
 			</div>
@@ -9694,7 +9695,7 @@ ninja.translator = {
 			"bulklabela2li1": "Use the Bulk Wallet tab to pre-generate a large number of peercoin addresses (10,000+). Copy and paste the generated comma separated values (CSV) list to a secure text file on your computer. Backup the file you just created to a secure location.",
 			"bulklabela2li2": "Import the peercoin addresses into a database table on your web server. (Don't put the wallet/private keys on your web server, otherwise you risk hackers stealing your coins. Just the peercoin addresses as they will be shown to customers.)",
 			"bulklabela2li3": "Provide an option on your website's shopping cart for your customer to pay in Peercoin. When the customer chooses to pay in Peercoin you will then display one of the addresses from your database to the customer as his "payment address" and save it with his shopping cart order.",
-			"bulklabela2li4": "You now need to be notified when the payment arrives. Google "peercoin payment notification" and subscribe to at least one peercoin payment notification service. There are various services that will notify you via Web Services, API, SMS, Email, etc. Once you receive this notification, which could be programmatically automated, you can process the customer's order. To manually check if a payment has arrived you can use Block Explorer. Replace THEADDRESSGOESHERE with the peercoin address you are checking. It could take between 10 minutes to one hour for the transaction to be confirmed.<br />https://bkchain.org/ppc/address/THEADDRESSGOESHERE<br /><br />Unconfirmed transactions can be viewed at: http://blockchain.peercointalk.org/ <br />You should see the transaction there within 30 seconds.",
+			"bulklabela2li4": "You now need to be notified when the payment arrives. Google "peercoin payment notification" and subscribe to at least one peercoin payment notification service. There are various services that will notify you via Web Services, API, SMS, Email, etc. Once you receive this notification, which could be programmatically automated, you can process the customer's order. To manually check if a payment has arrived you can use Block Explorer. Replace THEADDRESSGOESHERE with the peercoin address you are checking. It could take between 10 minutes to one hour for the transaction to be confirmed.<br />https://bkchain.org/ppc/address/THEADDRESSGOESHERE<br /><br />Unconfirmed transactions can be viewed at: https://bkchain.org/ <br />You should see the transaction there within 30 seconds.",
 			"bulklabela2li5": "Peercoins will safely pile up on the block chain. Use the original wallet file you generated in step 1 to spend them.",
 							
 			// brain wallet html
@@ -9818,7 +9819,7 @@ ninja.translator = {
 			"newaddress": "Generar dirección",
 			"singleprint": "Imprimir",
 			"singlelabelpeercoinaddress": "Dirección Peercoin",
-			"singlelabelprivatekey": "Clave privada (formato para importar):",
+			"singlelabelprivatekey": "Clave privada (formato para importar)",
 
 			// paper wallet html
 			"paperlabelhideart": "Ocultar diseño",
@@ -9931,7 +9932,7 @@ ninja.translator = {
 			"paperlabelprivatekey": "Clé Privée (WIF = Format d'Importation de Portefeuille) :",
 			"paperlabelencryptedkey": "Clé Privée Chiffrée au Format BIP38 :",
 			"bulkgeneratingaddresses": "Génération des adresses... ",
-			"brainalertpassphrasetooshort": "La phrase secrète que vous avez entré est trop courte.\n\nAttention : Choisir une phrase secrète solide est important pour vous protéger des attaques par force brute visant à trouver votre phrase secrète et voler vos Peercoins.",
+			"brainalertpassphrasetooshort": "La phrase secrète que vous avez entrée est trop courte.\n\nAttention : Choisir une phrase secrète solide est important pour vous protéger des attaques par force brute visant à trouver votre phrase secrète et voler vos Peercoins.",
 			"brainalertpassphrasedoesnotmatch": "La phrase secrète saisie ne correspond pas à la phrase secrète de vérification.",
 			"detailalertnotvalidprivatekey": "Le texte que vous avez entré n'est pas une Clé Privée valide",
 			"detailconfirmsha256": "Le texte que vous avez entré n'est pas une Clé Privée valide !\n\nVoulez-vous utiliser le texte entré comme une phrase secrète et créer une clé privée à partir d'un hash SHA256 de cette phrase secrète ?\n\nAttention: Choisir une phrase secrète solide est important pour vous protéger des attaques par force brute visant à trouver votre phrase secrète et voler vos Peercoins.",
@@ -9949,7 +9950,7 @@ ninja.translator = {
 			// Be careful: do not exceed the width of the menu
 			"singlewallet": "Portefeuille Simple",
 			"paperwallet": "Portefeuille Papier",
-			"bulkwallet": "Portefeuille En Vrac",
+			"bulkwallet": "Portefeuille en Vrac",
 			"brainwallet": "Portefeuille Cerveau",
 			"vanitywallet": "Portefeuille Vanité",
 			"detailwallet": "Détails du Portefeuille",
@@ -9964,33 +9965,33 @@ ninja.translator = {
 			"footerlabelgithub": "Dépôt GitHub",
 			"footerlabelcopyright1": "Copyright &copy; 2014 <a href=\"http://peercointalk.org/\" target=\"_blank\">peercointalk.org</a>.",
 			"footerlabelcopyright2": "Les droits d'auteurs JavaScript sont inclus dans le code source.",
-			"footerlabelnowarranty": "Utilisez à vos risques - Aucune Garantie",
-			"overviewvideo": "Video d'Aperçu - Pourquoi utiliser les portefeuille papiers",
-			"walkthroughvideo": "Video Pas à Pas - Comment utiliser les portefeuille papiers",
-			"overviewvideo1": "Video d'Aperçu - Pourquoi utiliser les portefeuille papiers",
-			"walkthroughvideo1": "Video Pas à Pas - Comment utiliser les portefeuille papiers",
+			"footerlabelnowarranty": "Utilisez à vos risques - Aucune Garantie.",
+			"overviewvideo": "Video d'Aperçu - Pourquoi utiliser les portefeuilles papier",
+			"walkthroughvideo": "Video Pas à Pas - Comment utiliser les portefeuilles papier",
+			"overviewvideo1": "Video d'Aperçu - Pourquoi utiliser les portefeuilles papier",
+			"walkthroughvideo1": "Video Pas à Pas - Comment utiliser les portefeuilles papier",
 
 			// single wallet html
 			"newaddress": "Générer une Nouvelle Adresse",
 			"singleprint": "Imprimer",
 			"singlelabelpeercoinaddress": "Adresse Peercoin",
 			"singleshare": "À PARTAGER",
-			"singlelabelprivatekey": "Clé Privée (WIF - Format d'Import de Portefeuille) :",
+			"singlelabelprivatekey": "Clé Privée (WIF - Format d'Import de Portefeuille)",
 
 			// paper wallet html
-			"paperlabelhideart": "Cacher le Style ?",
+			"paperlabelhideart": "Cacher le style ?",
 			"paperlabeladdressesperpage": "Adresses par page :",
 			"paperlabeladdressestogenerate": "Nombre d'adresses à générer :",
 			"papergenerate": "Générer",
 			"paperprint": "Imprimer",
-			"paperlabelencrypt": "Chiffrement B38 ?",
+			"paperlabelencrypt": "Chiffrement BIP38 ?",
 			"paperlabelBIPpassphrase": "Phrase secrète :",
 			"paperlabeladdressesperpage": "Adresses par page :",
-			"singletip1": "<b>Un portefeuille Peercoin</b> est aussi simple qu'une unique paire formée de l'adresse Peercoin avec sa clé privée Peercoin correspondante. Un tel portefeuille a été généré pour vous dans votre navigateur Web et est affiché ci-dessus.",
-			"singletip2": "<b>Pour préserver ce portefeuille</b> vous devez imprimer ou enregistrer l'adresse Peercoin et la clé privée. Il est important de faire une copie de sauvegarde de la clé privée et le stocker dans un endroit sûr. Ce site n'a pas connaissance de votre clé privée. Si vous êtes familier avec PGP, vous pouvez télécharger cette page HTML tout entière et vérifier que vous disposez d'une version authentique de l'auteur de ce site en faisant correspondre le hash SHA1 de cette page HTML avec le hash SHA1 disponible dans le document signé de l'historique des versions dont l'adresse de trouve au pied de page de ce site. Si vous quittez/actualisez le site ou appuyez sur le bouton \"Générer une Nouvelle Adresse\" une nouvelle clé privée sera générée et la clé privée précédemment affichée ne sera pas récupérable.	Votre clé privée Peercoin doit être gardée secrète. Toute personne à qui vous partagez la clé privée peut dépenser tous les Peercoins associés à cette adresse. Si vous imprimez votre portefeuille, stockez-le dans un sac à fermeture zip pour le garder à l'abri de l'eau. Traiter un portefeuille papier comme de l'argent.",
+			"singletip1": "<b>Un portefeuille Peercoin</b> est aussi simple à concevoir qu'une paire unique formée d'une adresse Peercoin et de sa clé privée Peercoin correspondante. Un tel portefeuille a été généré pour vous dans votre navigateur web et est affiché ci-dessus.",
+			"singletip2": "<b>Pour préserver ce portefeuille</b> vous devez imprimer ou enregistrer l'adresse Peercoin et sa clé privée. Il est important de faire une copie de sauvegarde de la clé privée et le stocker dans un endroit sûr. Ce site n'a pas connaissance de votre clé privée. Si vous êtes familier avec PGP, vous pouvez télécharger cette page HTML tout entière et vérifier que vous disposez d'une version authentique de l'auteur de ce site en faisant correspondre le hash SHA1 de cette page HTML avec le hash SHA1 disponible dans le document signé de l'historique des versions dont l'adresse de trouve au pied de page de ce site. Si vous quittez/actualisez le site ou appuyez sur le bouton \"Générer une Nouvelle Adresse\" une nouvelle clé privée sera générée et la clé privée précédemment affichée ne sera pas récupérable.	Votre clé privée Peercoin doit être gardée secrète. Toute personne à qui vous partagez la clé privée peut dépenser tous les Peercoins associés à l'adresse publique. Si vous imprimez votre portefeuille, stockez-le dans un sac à fermeture zip pour le garder à l'abri de l'eau. Traiter un portefeuille papier comme de l'argent.",
 			"singletip3": "<b>Ajoutez des fonds</b> pour ce portefeuille en demandant à d'autres d'envoyer des Peercoins à votre adresse Peercoin.",
 			"singletip4": "<b>Vérifiez votre solde</b> en allant à l'adresse https://bkchain.org/ppc ou http://ppc.blockr.io/ et en entrant votre adresse Peercoin.",
-			"singletip5": "<b>Dépensez vos Peercoins</b> en allant à l'adresse https://bkchain.org/ppc/wallet et récoltez la totalité du solde de votre clé privée sur votre compte sur leur site web. Vous pouvez également dépensez vos fonds en téléchargeant l'un des clients P2P Peercoin populaires en important votre clé privée sur le portefeuille du client P2P. Gardez à l'esprit que lorsque vous importez votre clé unique sur un client P2P Peercoin et que vous dépensez des fonds, votre clé sera liée avec d'autres clés privées contenues dans le portefeuille du client P2P. Lorsque vous effectuerez une transaction l'appoint sera envoyée à une autre adresse Peercoin contenue dans le portefeuille du client P2P. Vous devrez ensuite sauvegarder le portefeuille du client P2P et le garder en lieu sûr car vos Peercoins restants seront stockés dessus. Satoshi a conseillé que l'on ne supprime jamais aucun portefeuille.",
+			"singletip5": "<b>Dépensez vos Peercoins</b> en allant à l'adresse https://bkchain.org/ppc/wallet et récoltez la totalité du solde de votre clé privée sur votre compte sur leur site web. Vous pouvez également dépenser vos fonds en téléchargeant l'un des clients P2P Peercoin populaires en important votre clé privée sur le portefeuille du client P2P. Gardez à l'esprit que lorsque vous importez votre clé unique sur un client P2P Peercoin et que vous dépensez des fonds, votre clé sera liée avec d'autres clés privées contenues dans le portefeuille du client P2P. Lorsque vous effectuerez une transaction, l'appoint sera envoyé à une autre adresse Peercoin contenue dans le portefeuille du client P2P. Vous devrez ensuite sauvegarder le portefeuille du client P2P et le garder en lieu sûr, car vos Peercoins restants seront stockés dessus. Satoshi a conseillé que l'on ne supprime jamais aucun portefeuille.",
 			
 			
 			// bulk wallet html
@@ -10001,15 +10002,15 @@ ninja.translator = {
 			"bulklabelcompressed": "Adresses compressées ?",
 			"bulklabelcsv": "Valeurs Séparées par des Virgules (CSV):",
 			"bulklabelformat": "Index,Adresse,Clé Privée (WIF)",
-			"bulkexportpdf": "Exporter au format PDF",
-			"bulklabelq1": "Pourquoi devrais-je utiliser un Portefeuille En Vrac pour accepter des Peercoins sur mon site Web ?",
-			"bulka1": "L'approche traditionnelle pour accepter des Peercoins sur votre site Web requière l'installation du démon Peercoin officiel (\"ppcoind\"). Plusieurs hébergeurs de sites Web ne supportent pas l'installation du démon Peercoin. De plus, faire tourner le démon Peercoin sur votre serveur Web signifie que vos clés privées sont hébergées sur le serveur et pourraient donc être volées si votre serveur est compromis. En utilisant un Portefeuille En Vrac, vous pouvez publier sur votre serveur les adresses Peercoin uniquement et non les clé privées. Vous n'avez alors plus à vous inquiéter du risque de vous faire voler votre portefeuille si votre serveur est compromis.",
-			"bulklabelq2": "Comment utiliser le Portefeuille En Vrac pour accepter Peercoin sur mon site Web ?",
-			"bulklabela2li1": "Utilisez le Portefeuille En Vrac pour pré-générer une large quantité d'adresses Peercoin (10,000+). Copiez collez les données séparées par des virgules (CSV) dans un fichier texte sur votre ordinateur. Sauvegardez ce fichier dans un endroit sécurisé. Idéalement, vous devriez chiffrer ce fichier.",
-			"bulklabela2li2": "Importez les adresses Peercoin dans une base de donnée sur votre serveur Web. (N'ajoutez pas le portefeuille ou les clé privées sur votre serveur web, sinon vous risquez de vous faire voler si votre serveur est compromis. Ajoutez seulement les adresses Peercoin qui seront visibles par vos visiteurs.)",
-			"bulklabela2li3": "Ajoutez une option dans votre panier en ligne pour que vos clients puissent vous payer en Peercoin. Quand un client choisi de vous payer en Peercoin, vous pouvez afficher une des adresses de votre base de donnée comme \"adresse de paiement\" pour votre client et sauvegarder cette adresse avec sa commande.",
-			"bulklabela2li4": "Vous avez maintenant besoin de recevoir une notification quand le paiement est reçu ? Cherchez \"Peercoin payment notification\" sur Google et inscrivez-vous à l'un des services de notification de paiement Peercoin. Il y a plusieurs services qui vous notifieront via des services Web, API, SMS, Email, etc. Une fois que vous avez reçu cette notification, qui peut être programmer automatiquement, vous pouvez traiter la commande de votre client. Pour vérifier manuellement si un paiement est arrivé vous pouvez utiliser Block Explorer. Remplacez ADRESSE par l'adresse Peercoin que vous souhaitez vérifier. La confirmation de la transaction peut prendre de 10 à 60 minutes.<br />https://bkchain.org/ppc/address/ADRESSE<br /><br />Les transactions non confirmées peuvent être visualisées ici : https://bkchain.org <br />Vous devriez voir la transaction arriver sous un délai de 30 secondes.",
-			"bulklabela2li5": "Les Peercoins vont s'accumuler de façon sécurisé dans la chaîne de blocs. Utilisez le portefeuille original que vous avez généré à l'étape 1 pour les dépenser.",
+			"bulkexportpdf": "Exporter en PDF",
+			"bulklabelq1": "Pourquoi devrais-je utiliser un Portefeuille en Vrac pour accepter des Peercoins sur mon site web ?",
+			"bulka1": "L'approche traditionnelle pour accepter des Peercoins sur votre site web requière l'installation du démon Peercoin officiel (\"ppcoind\"). Plusieurs hébergeurs de sites web ne supportent pas l'installation du démon Peercoin. De plus, faire fonctionner le démon Peercoin sur votre serveur web signifie que vos clés privées sont hébergées sur le serveur et pourraient donc être volées si votre serveur était compromis. En utilisant un Portefeuille en Vrac, vous pouvez publier sur votre serveur les adresses Peercoin uniquement et non les clé privées. Vous n'avez alors plus à vous inquiéter du risque de vous faire voler votre portefeuille si votre serveur était compromis.",
+			"bulklabelq2": "Comment utiliser le Portefeuille en Vrac pour accepter Peercoin sur mon site web ?",
+			"bulklabela2li1": "Utilisez le Portefeuille en Vrac pour prégénérer une large quantité d'adresses Peercoin (10,000+). Copiez-collez les données séparées par des virgules (CSV) dans un fichier texte sur votre ordinateur. Sauvegardez ce fichier dans un endroit sécurisé. Idéalement, vous devriez chiffrer ce fichier.",
+			"bulklabela2li2": "Importez les adresses Peercoin dans une base de données sur votre serveur web. (N'ajoutez pas le portefeuille ou les clés privées sur votre serveur web, sinon vous courrez le risque de vous faire voler si votre serveur est compromis. Ajoutez seulement les adresses Peercoin qui seront visibles par vos visiteurs.)",
+			"bulklabela2li3": "Ajoutez une option dans votre panier en ligne pour que vos clients puissent vous payer en Peercoin. Quand un client choisi de vous payer en Peercoin, vous pouvez afficher une des adresses de votre base de données comme \"adresse de paiement\" pour votre client et sauvegarder cette adresse avec sa commande.",
+			"bulklabela2li4": "Vous avez maintenant besoin d'être avisé quand le paiement est reçu ? Cherchez \"Peercoin payment notification\" sur Google et inscrivez-vous à l'un des services de notification de paiement Peercoin. Il y a plusieurs services qui vous notifieront via des services Web, API, SMS, Email, etc. Une fois que vous avez reçu la notification, qui devrait être programmée automatiquement, vous pouvez traiter la commande de votre client. Pour vérifier manuellement si un paiement est arrivé vous pouvez utiliser Block Explorer. Remplacez ADRESSE par l'adresse Peercoin que vous souhaitez vérifier. La confirmation de la transaction peut prendre de 10 à 60 minutes.<br />https://bkchain.org/ppc/address/ADRESSE<br /><br />Les transactions non confirmées peuvent être visualisées ici : https://bkchain.org <br />Vous devriez voir la transaction arriver sous un délai de 30 secondes.",
+			"bulklabela2li5": "Les Peercoins vont s'accumuler de façon sécurisée dans la chaîne de blocs. Utilisez le portefeuille original que vous avez généré à l'étape 1 pour les dépenser.",
 
 			// brain wallet html
 			"brainlabelenterpassphrase": "Votre phrase secrète :",
@@ -10025,7 +10026,7 @@ ninja.translator = {
 			"braingeneratewordbutton": "Générer des Mots",
 			"braingeneratedwordlist": "PAS ENCORE GÉNÉRÉ - CLIQUEZ SUR LE BOUTON GÉNÉRER !",
 			"brainwarning1": "<strong>Avant d'utiliser un portefeuille de cerveau, assurez-vous de bien comprendre la sécurité et les risques impliqués</strong>",
-			"brainwarninglink1": "<a href=\"http://www.peercointalk.org/index.php?topic=2004\" id=\"brainwarninglink1\">(En savoir plus).</a>",
+			"brainwarninglink1": "<a href=\"http://www.peercointalk.org/index.php?topic=2004\" id=\"brainwarninglink1\">(en savoir plus).</a>",
 			"brainwarning2": "12 mots choisis au hasard seront générés pour vous afin de les utiliser comme une phrase secrète pour votre portefeuille de cerveau. La ",
 			"brainwarninglink2": "<a href=\"https://raw.github.com/spesmilo/electrum/master/lib/mnemonic.py\" id=\"brainwarninglink2\">liste de mots</a> ",
 			"brainwarning3": "utilisée ici est la même que celle utilisée par le programme",
@@ -10035,14 +10036,14 @@ ninja.translator = {
 			"brainwarning7": "Assurez-vous de les écrire et les garder en sécurité et hors ligne; si vous perdez ces mots, vous risquez de perdre tous vos Peercoins.",
 
 			// vanity wallet html
-			"vanitylabelstep1": "Étape 1 - Générer votre \"Paire de Clés de 1ère Étape\"",
+			"vanitylabelstep1": "Étape 1 - Générer votre \"Paire de Clés de 1re Étape\"",
 			"vanitynewkeypair": "Générer",
 			"vanitylabelstep1publickey": "Étape 1 Clé Publique :",
 			"vanitylabelstep1pubnotes": "Copiez et collez celle-ci dans la zone Votre-Clé-Publique du site Vanity Pool.",
 			"vanitylabelstep1privatekey": "Étape 1 Clé Privée :",
-			"vanitylabelstep1privnotes": "Copiez et collez la clé privée ci-dessus dans un fichier texte. Idéalement sauvegardez-la sur un disque chiffré. Vous en aurez besoin pour récupérer la Clé Privée Peercoin lorsque Vanity Pool aura trouvé votre préfixe.",
+			"vanitylabelstep1privnotes": "Copiez et collez la clé privée ci-dessus dans un fichier texte. Idéalement, sauvegardez-la sur un disque chiffré. Vous en aurez besoin pour récupérer la Clé Privée Peercoin lorsque Vanity Pool aura trouvé votre préfixe.",
 			"vanitylabelstep2calculateyourvanitywallet": "Étape 2 - Calculer votre Portefeuille vanité",
-			"vanitylabelenteryourpart": "Entrez Votre Clé Privée (générée à l'étape 1 plus haut et sauvegardée précédemment) :",
+			"vanitylabelenteryourpart": "Entrez Votre Clé Privée (générée à l'étape 1 plus haut et précédemment sauvegardée) :",
 			"vanitylabelenteryourpoolpart": "Entrez la Clé Privée (provenant de Vanity Pool) :",
 			"vanitylabelnote1": "[NOTE : cette zone peut accepter une clé publique ou une clé privée]",
 			"vanitylabelnote2": "[NOTE : cette zone peut accepter une clé publique ou une clé privée]",
@@ -10057,11 +10058,11 @@ ninja.translator = {
 			"vanitylabelnotesprivatekey": "Ci-dessus est la Clé Privée à utiliser dans votre portefeuille.",
 			
 			// split wallet html
-			"splitlabelthreshold": "Seuil minimal de portions (shares) nécessaire à combiner",
-			"splitlabelshares": "Nombre de portions (shares)",
+			"splitlabelthreshold": "Seuil minimal de portions (ou partages = Shares) nécessaire à combiner",
+			"splitlabelshares": "Nombre de portions",
 			"splitview": "Générer",
-			"combinelabelentershares": "Entrez les Portions (Shares) Disponibles (séparées par des espaces)",
-			"combineview": "Combinez les Portions (Shares)",
+			"combinelabelentershares": "Entrez les Portions Disponibles (séparées par des espaces)",
+			"combineview": "Combinez les Portions",
 			"combinelabelprivatekey": "Clé Privée Combinée",
 
 			// detail wallet html
@@ -10072,19 +10073,19 @@ ninja.translator = {
 			"detaillabelpassphrase": "Entrez la phrase secrète BIP38",
 			"detaildecrypt": "Déchiffrer BIP38",
 			"detaillabelnote1": "Votre clé privée Peercoin est un nombre secret unique que vous êtes le seul à connaître. Elle peut être encodée sous différents formats. Ci-dessous, nous affichons l'adresse Peercoin, la Clé Publique ainsi que la Clé Privée dans les formats d'encodage les plus populaires (WIF, HEX, B64 et MINI).",
-			"detaillabelnote2": "Peercoin v0.3+ conserve les Clés Publiques dans un format compressé. Le client supporte maintenant aussi l'importation et l'exportation des clé privées avec importprivkey/dumpprivkey. Le format de la clé privée exportée est déterminé suivant si l'adresse a été générée avec un vieux ou un nouveau portefeuille.",
+			"detaillabelnote2": "Peercoin v0.3+ conserve les Clés Publiques dans un format compressé. Le client supporte maintenant aussi l'importation et l'exportation des clés privées avec importprivkey/dumpprivkey. Le format de la clé privée exportée est déterminé suivant si l'adresse a été générée avec un ancien ou un nouveau portefeuille.",
 			"detaillabelpeercoinaddress": "Adresse Peercoin :",
 			"detaillabelpeercoinaddresscomp": "Adresse Peercoin (compressée) :",
 			"detaillabelpublickey": "Clé Publique (130 caractères [0-9A-F]) :",
 			"detaillabelpublickeycomp": "Clé Publique (compressée, 66 caractères [0-9A-F]) :",
-			"detaillabelprivwif": "Clé Privée WIF (51 caractères base58, commançant par un",
+			"detaillabelprivwif": "Clé Privée WIF (51 caractères base58, commençant par un",
 			"detaillabelprivwifcomp": "Clé Privée WIF (compressée, 52 caractères base58, commence par un",
 			"detaillabelprivhex": "Clé Privée Format Hexadecimal (64 caractères [0-9A-F]) :",
 			"detaillabelprivb64": "Clé Privée Base64 (44 caractères) :",
 			"detaillabelprivbip38": "Clé Privée au format BIP38 (58 caractères base58, commence par '6P') :",
 			"detaillabelprivmini": "Clé Privée Format Mini (22, 26 ou 30 caractères, commence par un 'S') :",
 			"detaillabelq1": "Comment puis-je créer un portefeuille à l'aide de dés ? Qu'est-ce que B6 ?",
-			"detaila1": "Une partie importante lors de la création d'un portefeuille Peercoin est de s'assurer que les nombres aléatoires utilisés pour créer le portefeuille sont vraiment aléatoires. L'aléatoire généré de manière physique est mieux que le pseudo-aléatoire généré par un ordinateur. La méthode la plus simple de générer de l'aléatoire de manière physique est avec un dé. Pour créer une adresse privée Peercoin, vous avez seulement besoin d'un dé à six faces que vous lancez 99 fois. En vous arrêtant à chaque fois pour enregistrer la valeur du dé. Lorsque vous enregistrez les valeurs, suivez cette règle : 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. En faisant cela vous enregistrez le grand nombre aléatoire, votre clé privée, en format B6 ou base 6. Vous pouvez ensuite entrer les 99 caractères en base 6 de la clé privée dans la champ texte au dessus et cliquer sur Voir Détails. Vous verrez ensuite l'adresse Peercoin associée avec la clé privée. Vous devriez également prendre note de votre clé privée en format WIF car ce format est plus largement utilisé."
+			"detaila1": "Une part importante lors de la création d'un portefeuille Peercoin est de s'assurer que les nombres aléatoires utilisés pour créer le portefeuille sont vraiment aléatoires. L'aléatoire généré de manière physique est meilleur que le pseudo-aléatoire généré par un ordinateur. La méthode la plus simple de générer de l'aléatoire de manière physique est avec un dé. Pour créer une adresse privée Peercoin, vous n'avez seulement besoin que d'un dé à six faces que vous lancez 99 fois. En vous arrêtant à chaque fois pour enregistrer la valeur du dé. Lorsque vous enregistrez les valeurs, suivez cette règle : 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. En faisant cela, vous enregistrez le grand nombre aléatoire, votre clé privée, en format B6 ou base 6. Vous pouvez ensuite entrer les 99 caractères en base 6 de la clé privée dans le champ texte au-dessus et cliquer sur Voir Détails. Vous verrez ensuite l'adresse Peercoin associée avec la clé privée. Vous devriez également prendre note de votre clé privée en format WIF, car ce format est plus largement utilisé."
 		},
 
 		"it": {
@@ -10286,7 +10287,7 @@ ninja.translator = {
 			"newaddress": "Генерировать новый адрес",
 			"singleprint": "Печатать",
 			"singlelabelpeercoinaddress": "Peercoin-адрес",
-			"singlelabelprivatekey": "Приватный ключ (формат для импорта):",
+			"singlelabelprivatekey": "Приватный ключ (формат для импорта)",
 
 			// paper wallet html
 			"paperlabelhideart": "Убрать графику",
@@ -10441,8 +10442,8 @@ ninja.translator = {
 			// single wallet html
 			"newaddress": "建立新地址",
 			"singleprint": "打印",
-			"singlelabelpeercoinaddress": "点点币地址:",
-			"singlelabelprivatekey": "私钥 (导入钱包的模式):",
+			"singlelabelpeercoinaddress": "点点币地址",
+			"singlelabelprivatekey": "私钥 (导入钱包的模式)",
 
 			// paper wallet html
 			"paperlabelhideart": "去除样式",
