@@ -8591,6 +8591,7 @@ body, html { height: 99%; }
 			<span><a href="?culture=en" id="cultureen" class="selected">English</a></span>
 			<span><a href="?culture=es" id="culturees">Español</a></span>
 			<span><a href="?culture=fr" id="culturefr">Français</a></span>
+			<span><a href="?culture=it" id="cultureit">Italiano</a></span>
 			<span><a href="?culture=ru" id="cultureru">Русский</a></span>
 			<span><a href="?culture=zh-cn" id="culturezh-cn">简体中文</a></span>
 		</div>
@@ -10084,6 +10085,157 @@ ninja.translator = {
 			"detaillabelprivmini": "Clé Privée Format Mini (22, 26 ou 30 caractères, commence par un 'S') :",
 			"detaillabelq1": "Comment puis-je créer un portefeuille à l'aide de dés ? Qu'est-ce que B6 ?",
 			"detaila1": "Une partie importante lors de la création d'un portefeuille Peercoin est de s'assurer que les nombres aléatoires utilisés pour créer le portefeuille sont vraiment aléatoires. L'aléatoire généré de manière physique est mieux que le pseudo-aléatoire généré par un ordinateur. La méthode la plus simple de générer de l'aléatoire de manière physique est avec un dé. Pour créer une adresse privée Peercoin, vous avez seulement besoin d'un dé à six faces que vous lancez 99 fois. En vous arrêtant à chaque fois pour enregistrer la valeur du dé. Lorsque vous enregistrez les valeurs, suivez cette règle : 1=1, 2=2, 3=3, 4=4, 5=5, 6=0. En faisant cela vous enregistrez le grand nombre aléatoire, votre clé privée, en format B6 ou base 6. Vous pouvez ensuite entrer les 99 caractères en base 6 de la clé privée dans la champ texte au dessus et cliquer sur Voir Détails. Vous verrez ensuite l'adresse Peercoin associée avec la clé privée. Vous devriez également prendre note de votre clé privée en format WIF car ce format est plus largement utilisé."
+		},
+
+		"it": {
+			// javascript alerts or messages
+			"testneteditionactivated": " TESTNET PEERCOIN ATTIVATA",
+			"paperlabelpeercoinaddress": "Indirizzo Peercoin:",
+			"paperlabelprivatekey": "Chiave Privata (Formato d'importazione del Portafoglio):",
+			"bulkgeneratingaddresses": "Generazione dell'indirizzo... ",
+			"brainalertpassphrasetooshort": "La Passphrase che hai inserito è troppo corta.\n\nAttenzione: Scegliere una Passphrase complessa e articolata è importantissimo per impedire agli attacchi a forza bruta di indovinare la vostra Passphrase e rubare i vostri peercoins.",
+			"brainalertpassphrasedoesnotmatch": "La Passphrase  non corrisponde alla Passphrase di conferma.",
+			"detailalertnotvalidprivatekey": "Il testo inserito non è una Chiave Privata valida",
+			"detailconfirmsha256": "Il testo inserito non è una Chiave Privata valida!\n\nDesideri usare il testo inserito come Passphrase e creare una Chiave Privata usando l'hash SHA256 della Passphrase?\n\nAttenzione: Scegliere una Passphrase complessa e articolata è importantissimo per impedire agli attacchi a forza bruta di indovinare la vostra Passphrase e rubare i vostri peercoins.",
+			"vanityinvalidinputcouldnotcombinekeys": "Inserimento non valido. Impossibile combinare le chiavi.",
+			"vanityalertinvalidinputpublickeysmatch": "Inserimento non valido. La Chiave Pubblica è uguale in ambe gli inserimenti. Devi inserire due Chiavi diverse l'una dall'altra.",
+			"vanityalertinvalidinputcannotmultiple": "Inserimento non valido. Due chiavi pubbliche non possono essere moltiplicate. Selezionare 'Aggiungi' per aggiungere due chiavi pubbliche così da ottenere un indirizzo Peercoin.",
+			"vanityprivatekeyonlyavailable": "Disponibile solo combinando due chiavi private.",
+			"vanityalertinvalidinputprivatekeysmatch": "Inserimento invalido. Entrambe le Chiavi Private corrispondono. Devi inserire due chiavi diverse.",
+			"generatelabelkeypress": "OPPURE digitate dei caratteri casuali in questo campo.",
+
+			// header and menu html
+			"tagline": "Generatore di Portafogli Peercoin Client-Side Javascript Open Source",
+			"generatelabelpeercoinaddress": "Generazione di un indirizzo Peercoin...",
+			"generatelabelmovemouse": "MUOVETE il mouse per aggiungere sicurezza con ulteriore generazione di numeri casuali...",
+			"generatelabelkeypress": "OPPURE digitate in questo campo dei caratteri a caso",
+			"singlewallet": "Portafolgio singolo",
+			"paperwallet": "Portafoglio Cartaceo",
+			"bulkwallet": "Portafogli multipli",
+			"brainwallet": "Portafoglio Mentale",
+			"vanitywallet": "Portafoglio Vanity",
+			"detailwallet": "Dettagli Portafoglio",
+			"splitwallet": "Split Wallet",
+
+			// footer html
+			"footerlabeldonations": "Donazioni:",
+			"donate": "Donate per lo sviluppo di questo progetto",
+			"footerlabelgithub": "Repository GitHub",
+			"footerlabelcopyright1": "Copyright &copy; 2014 <a href=\"http://peercointalk.org/\" target=\"_blank\">peercointalk.org</a>.",
+			"footerlabelcopyright2": "I JavaScript copyrights sono inclusi nel codice.",
+			"footerlabelnowarranty": "Utilizzate a vostro rischio – Nessuna Garanzia",
+			"overviewvideo": "Video Descrittivo – perché usare portafogli cartacei",
+			"walkthroughvideo": "Video Guida – come usare il portafoglio cartaceo",
+			"overviewvideo1": "Video Descrittivo – perché usare portafogli cartacei",
+			"walkthroughvideo1": "Video Guida – come usare il portafoglio cartaceo",
+
+			// single wallet html
+			"newaddress": "Genera Nuovo Indirizzo",
+			"singleprint": "Stampa",
+			"singlelabelpeercoinaddress": "Indirizzo Peercoin",
+			"singlelabelprivatekey": "Chiave Privata (WIF – Formato d'importazione del Portafoglio):",
+
+			// paper wallet html
+			"paperlabelhideart": "Senza Grafica?",
+			"paperlabeladdressesperpage": "Indirizzi per pagina:",
+			"paperlabeladdressestogenerate": "Indirizzi Totali:",
+			"papergenerate": "Genera",
+			"paperprint": "Stampa",
+			"paperlabelBIPpassphrase": "Passphrase:",
+			"singletip1": "<b>Un Portafoglio Peercoin</b> è composto semplicemente da una coppia di valori: l'indirizzo e la sua chiave privata. Un portafoglio è stato appena generato sul tuo browser ed è mostrato sopra.",
+			"singletip2": "<b>Per mettere in sicurezza questo portafoglio</b> devi stampare o quantomeno salvare l'indirizzo Peercoin e la sua chiave Privata. E' importantissimo fare una copia della chiave privata e conservarla in un posto sicuro. Questo sito conosce la tua chiave privata. Se hai familiarità con PGP, puoi scaricare per intero questa pagina HTML e controllare la sua autenticità. Puoi confrontare il codice SHA1 della pagina scaricata con il codice firmato dall'autore che trovi nella cronologia delle versioni (in fondo pagina). Se abbandoni/aggiorni la pagina web oppure premi il tasto Genera, un nuovo indirizzo sostituirà quello vecchio che non potrà più essere recuperato. La chiave privata dovrebbe essere tenuta segreta, chiunque conosca la chiave privata può avere accesso e spendere i tuoi Peercoin. Se stampi il portafogli conservalo in una busta di plastica sigillata per tenerla lontana dall'acqua. Tratta quanto stampato alla stregua di una banconota.",
+			"singletip3": "<b>Ricevi fondi</b> su questo portafoglio mostrando l'indirizzo Peercoin per il versamento.",
+			"singletip4": "<b>Controlla il saldo</b> visitando https://bkchain.org/ppc oppure http://ppc.blockr.io/ e inserisci il tuo indirizzo.",
+			"singletip5": "<b>Spendi i tuoi Peercoins</b> andando su https://bkchain.org/ppc/wallet e versa l'intero ammontare della specifica chiave privata che vuoi usare, nell tuo account sul loro sito. Puoi anche spendere i tuoi Peercoin Scaricando il popolare Peercoin client p2p (Peercoin-QT oppure Peerunity su peercoin.net/wallet) e importare la tua chiave privata nel portafoglii client p2p.  Tieni presente che quando importi una chiave nel client p2p, nel momento in cui spendi le monete, la chiave viene raggruppata insieme alle altre presenti nel programma con i restanti peercoin. Quando esegui una transazione gli spiccioli verranno inviati verso un altro indirizzo all'interno del tuo portafoglio gestito dal client p2p. Quindi dovresti tenere un backup del portafoglio contenuto nel client p2p e tenere questo in un posto sicuro fin tanto che terrai li dei peercoin. Satoshi, come il buon senso suggerisce, consigliava di non cancellare mai un portafogli.",
+
+			// bulk wallet html
+			"bulklabelstartindex": "Indice iniziale:",
+			"bulklabelrowstogenerate": "Righe da generare:",
+			"bulkgenerate": "Genera",
+			"bulkprint": "Stampa",
+			"bulklabelcompressed": "Indirizzo compresso?",
+			"bulklabelcsv": "Valori separati da virgola:",
+			"bulkexportpdf": "Esporta a PDF",
+			"bulklabelformat": "Indice,Indirizzo,Chiave Privata (WIF)",
+			"bulklabelq1": "Perché dovrei usare tanti portafogli per accettare Peercoin sul mio sito web?",
+			"bulka1": "Il tradizionale approccio per accettare i Peercoin è quello di installare il demone ufficiale Peercoin (\"ppcoind\"). Molti pacchetti di hosting web non supportano l'installazione di tale demone. Inoltre tenere in esecuzione il demone richiede che la chiave privata del portafogli sia custodita sul server, se questo viene violato tramite hacking puoi perdere tutti i Peercoin. Usando portafogli multipli puoi caricare sul server solo l'indirizzo per il versamento e non la chiave privata. Quindi non devi preoccuparti del tuo portafogli nel caso in cui il server venga violato con un attacco di hacking.",
+			"bulklabelq2": "Come utilizzo tutti questi portafogli per accettare Peercoin sul mio sito web?",
+			"bulklabela2li1": "Usa la funzione \"Portafogli multipli\" per generare una grande quantità di indirizzi Peercoin (10,000+). Copia e incolla la lista generata in formato CSV (campi separati da virgola) su un file, al sicuro nel tuo computer. Fai una copia di backup di questo file e mettilo in un posto sicuro.",
+			"bulklabela2li2": "Importa gli indirizzi Peercoin in una tabella del database sul tuo web server. (Non importare i portafogli/chiavi private sul web server, altrimenti corri il rischio che rubino i tuoi Peercoin con l'hacking. Usa gli indirizzi Peercoin così come verranno mostrati ai tuoi clienti).",
+			"bulklabela2li3": "Fornisci una opzione nel carrello del tuo sito web per pagare in Peercoin. Quando il cliente sceglie di pagare in Peercoin, gli mostrerai un indirizzo dal tuo database come \"indirizzo di pagamento\" e conserverai questo stesso indirizzo insieme ai dati dell'ordine.",
+			"bulklabela2li4": "Ora hai bisogno di notificare l'arrivo del pagamento. Cerca su Google \"notifiche pagamento Peercoin\" ed iscriviti ad almeno un servizio di notifica. Esistono diversi servizi che possono notificare in vari modi come Web Services, API, SMS, Email, etc. Una volta ricevuta la notifica, la quale può essere automatizzata con la programmazione, puoi processare l'ordine del cliente. Per verificare manualmente se l'ordine è davvero arrivato puoi usare un block explorer. Sostituisci INDIRIZZODACONTROLLARE con l'indirizzo Peercoin da controllare. Possono volerci dai 10 fino a 60 minuti per fare in modo che una transazione venga confermata..<br />https://bkchain.org/ppc/address/INDIRIZZODACONTROLLARE<br /><br />Le transazioni non confermate possono essere visionate su: http://blockchain.peercointalk.org/ <br />Dovresti vedere la transazione entro 30 secondi.",
+			"bulklabela2li5": "In questo modo i Peercoin transiteranno nella blockchain in tutta sicurezza. Usa il portafogli creato nel Passo 1 per spendere i Peercoin.",
+
+			// brain wallet html
+			"brainlabelenterpassphrase": "Inserisci la Passphrase:",
+			"brainlabelshow": "Mostra?",
+			"brainprint": "Stampa",
+			"brainlabelconfirm": "Conferma Passphrase:",
+			"brainview": "Visiona",
+			"brainalgorithm": " <a href=\"http://www.peercointalk.org/index.php?topic=2004\" target=\"_blank\">Prima di generare un Portafoglio Mentale leggete questa discussione</a>",
+			"brainlabelpeercoinaddress": "Indirizzo Peercoin:",
+			"brainlabelprivatekey": "Chiave Privata (WIF – Formato d'importazione del Portafoglio):",
+			"brainlabelq1": "Genera Parole casuali",
+			"braingeneratewordcountlabel": "Numero di Parole: ",
+			"braingeneratewordbutton": "Genera Parole",
+			"braingeneratedwordlist": "NON ANCORA GENERATO – CLICCA IL PULSANTE GENERA PAROLE!",
+			"brainwarning1": "<strong>Prima di usare un portafoglio mentale, accertatevi di comprenderne la sicurezza e i rischi coinvolti</strong>",
+			"brainwarninglink1": "<a href=\"http://www.peercointalk.org/index.php?topic=2004\" id=\"brainwarninglink1\">(Leggi).</a>",
+			"brainwarning2": "12 Parole scelte casualmente saranno generate per te da usare come passphrase per il tuo portafoglio mentale. La ",
+			"brainwarninglink2": "<a href=\"https://raw.github.com/spesmilo/electrum/master/lib/mnemonic.py\" id=\"brainwarninglink2\">lista di parole</a>",
+			"brainwarning3": "usata qui è la stessa utilizzata dal ",
+			"brainwarning4": "programma open source il quale puoi controllare personalmente.",
+			"brainwarning5": "Le parole generate vanno copiate e incollate nel campo Passphrase qui sopra per generare la tua chiave privata e l'indirizzo pubblico.",
+			"brainwarning6": "Le parole generate saranno sempre in minuscolo e separate da uno spazio. Controlla più volte, di non avere un extra spazio inserito alla fine, si potrebbe generare confusione in un secondo momento.",
+			"brainwarning7": "Assicuratevi di scrivervelo a mano e mantenetelo al sicuro offline; se perdete queste parole, potreste perdere tutti i vostri peercoin.",
+
+			// vanity wallet html
+			"vanitylabelstep1": "Passo1 - Genera la tua Coppia di chiavi:",
+			"vanitynewkeypair": "Genera",
+			"vanitylabelstep1publickey": "Chiave Pubblica:",
+			"vanitylabelstep1pubnotes": "Copia e incolla il testo soprastante nel campo \"chiave-pubblica-parziale\" sul sito web del Vanity Pool.",
+			"vanitylabelstep1privatekey": "Chiave Privata:",
+			"vanitylabelstep1privnotes": "Copia e incolla la Chiave Privata soprastante su un file di testo. Idealmente conservalo su un disco criptato. Ti servirà per recuperare la Chiave Privata Peercoin una volta che il Pool avrà trovato quella col prefisso scelto.",
+			"vanitylabelstep2calculateyourvanitywallet": "Passo 2 - Calcolo del Portafoglio Vanity",
+			"vanitylabelenteryourpart": "Inserisci la tua Chiave Privata parziale (Generata nel Passo 1 e precedentemente salvata):",
+			"vanitylabelenteryourpoolpart": "Inserisci la Chiave privata parziale generata dal pool(dal Vanity Pool):",
+			"vanitylabelnote1": "[NOTA: questo campo può accettare sia chiavi pubbliche che private]",
+			"vanitylabelnote2": "[NOTA: questo campo può accettare sia chiavi pubbliche che private]",
+			"vanitylabelradioadd": "Aggiungi",
+			"vanitylabelradiomultiply": "Moltiplica",
+			"vanitycalc": "Calcola Portafoglio Vanity",
+			"vanitylabelpeercoinaddress": "Indirizzo Peercoin Vanity:",
+			"vanitylabelnotespeercoinaddress": "Sopra trovi il tuo nuovo indirizzo che dovrebbe includere il prefisso che hai scelto.",
+			"vanitylabelpublickeyhex": "Chiave Pubblica Vanity (HEX):",
+			"vanitylabelnotespublickeyhex": "Quella sopra è la Chiave Pubblica nel formato esadecimale.",
+			"vanitylabelprivatekey": "Chiave Privata Vanity (WIF):",
+			"vanitylabelnotesprivatekey": "Quella sopra è la Chiave Privata da caricare nel tuo portafoglio.",
+
+			// split wallet html
+			"splitlabelthreshold": "Soglia minima di porzioni (shares) necessarie per combinare",
+			"splitlabelshares": "Numero di shares",
+			"splitview": "Genera",
+			"combinelabelentershares": "Inserire Shares disponibili (separati da uno spazo)",
+			"combineview": "Combina gli Shares",
+			"combinelabelprivatekey": "Chiavi Private Combinate",
+
+			// detail wallet html
+			"detaillabelenterprivatekey": "Inserire la Chiave Privata",
+			"detailview": "Mostra Dettagli",
+			"detailprint": "Stampa",
+			"detaillabelnote1": "La tua Chiave privata Peercoin è rappresentata da un numero segreto, unico al mondo, che dovresti conoscere soltanto tu. Può essere codificato in molti formati differenti. Di seguito verrà mostrato l'indirizzo Peercoin e la chiave pubblica, con la corrispondente chiave privata, nei più diffusi formati di codifica (WIF, WIFC, HEX, B64, MINI).",
+			"detaillabelnote2": "Il client Peercoin, dalla versione v0.3+, memorizza le chiavi pubbliche in formato compresso. Il programma ora supporta l'importazione e l'esportazione delle chiavi private attraverso importprivkey/dumpprivkey. Il formato con cui viene esportata la chiave privata dipende se l'indirizzo generato è stato creato con il nuovo o vecchio portafogli.",
+			"detaillabelpeercoinaddress": "Indirizzo Peercoin:",
+			"detaillabelpeercoinaddresscomp": "Indirizzo Peercoin (compresso):",
+			"detaillabelpublickey": "Chiave Pubblica (130 caratteri [0-9A-F]):",
+			"detaillabelpublickeycomp": "Chiave Pubblica (compressa, 66 caratteri [0-9A-F]):",
+			"detaillabelprivwif": "Chiave Privata WIF (51 caratteri base58, inizia per un",
+			"detaillabelprivwifcomp": "Chiave Privata WIF (compressa, 52 caratteri base58, inizia per",
+			"detaillabelprivhex": "Chiave Privata formato esadecimale (64 caratteri [0-9A-F]):",
+			"detaillabelprivb64": "Chiave Privata Base64 (44 caratteri):",
+			"detaillabelprivmini": "Chiave Privata Formato Mini (22, 26 or 30 caratteri, comincia con un 'S'):",
+			"detaillabelq1": "Come posso creare un portafoglio usando i dadi? Che cos'è B6?",
+			"detaila1": "Una parte importante nella creazione di un portafoglio Peercoin, è assicurarsi la casualità dei numeri usati per creare il portafoglio, sia il più casuale possibile. La casualità generata fisicamente è migliore della pseudo-casualità generata da un computer. La più semplice maniera per generare casualità fisica sono i dadi. Per creare una chiave privata Peercoin avete bisogno di un semplice dado a sei facce il quale girerete/tirerete 99 volte. Ad ogni \"lancio\" segnerete il valore del dado. Mentre segnate i valori, seguite queste regole: 1=1, 2=2, 3=3, 4=4, 5=5 6=0. Così facendo registrate il grande numero casuale risultante, la vostra chiave privata in B6 o formato base 6. Potete poi inserire la vostra chiave privata di 99 caratteri base 6 nel campo qui sopra e cliccare su Mostra Dettagli. Vedrete l'indirizzo Peercoin associato alla vostra chiave privata. Dovreste anche prendere nota, a mano, della vostra Chiave Privata formato WIF dal momento che è ampiamente la più utilizzata."
 		},
 		
 		"ru": {
